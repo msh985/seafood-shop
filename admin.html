@@ -642,12 +642,17 @@ function saveSettings() {
 document.querySelectorAll(".sidebar a[data-page]").forEach(a => {
   a.addEventListener("click", function(e) {
     e.preventDefault();
-    document.querySelectorAll(".sidebar a[data-page]").forEach(x => x.classList.remove("active"));
-    this.classList.add("active");
-    document.querySelectorAll("#mainContent > div").forEach(d => d.style.display = "none");
-    const pageId = "page-" + this.dataset.page;
-    document.getElementById(pageId).style.display = "block";
-    if (this.dataset.page === "settings") loadSettings();
+    var link = e.target.closest("a[data-page]");
+    if (!link) return;
+    document.querySelectorAll(".sidebar a[data-page]").forEach(function(x){ x.classList.remove("active"); });
+    link.classList.add("active");
+    document.querySelectorAll("#mainContent > div").forEach(function(d){ d.style.display = "none"; });
+    var pageId = "page-" + link.dataset.page;
+    var pageEl = document.getElementById(pageId);
+    if (pageEl) pageEl.style.display = "block";
+    if (link.dataset.page === "products") renderTable();
+    if (link.dataset.page === "orders") renderOrders();
+    if (link.dataset.page === "settings") loadSettings();
   });
 });
 
