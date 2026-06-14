@@ -300,8 +300,6 @@ const defaultProducts = [
   { id:16, name:"豪华海鲜礼盒", cat:"gift", img:"", desc:"黄鱼+梭子蟹+带鱼+鲳鱼+虾皮", price:388, unit:"套", tag:"高端", published:true }
 ];
 
-];
-
 let products; try { products = loadShopProducts(); } catch(e) { console.warn("localStorage error, using defaults"); products = defaultProducts; }
 let cart = [];
 let currentCat = "all";
