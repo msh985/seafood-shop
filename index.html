@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>朱家尖海鲜配送 - 扫码下单</title>
+<title>鏈卞灏栨捣椴滈厤閫?- 鎵爜涓嬪崟</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f5f5;color:#333;max-width:480px;margin:0 auto;min-height:100vh}
@@ -148,114 +148,114 @@ body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;backgr
 </head>
 <body>
 <div class="header">
-  <h1>🦐 朱家尖海鲜配送</h1>
-  <button class="admin-btn" onclick="showLogin()" title="后台管理">⚙</button>
+  <h1>馃 鏈卞灏栨捣椴滈厤閫?/h1>
+  <button class="admin-btn" onclick="showLogin()" title="鍚庡彴绠＄悊">鈿?/button>
 </div>
 
 <div class="banner">
-  <div class="banner-icon">🚢</div>
-  <div><h3>码头直发 · 新鲜到家</h3><p>舟山朱家尖渔船直供，扫码下单送到车上</p></div>
+  <div class="banner-icon">馃殺</div>
+  <div><h3>鐮佸ご鐩村彂 路 鏂伴矞鍒板</h3><p>鑸熷北鏈卞灏栨笖鑸圭洿渚涳紝鎵爜涓嬪崟閫佸埌杞︿笂</p></div>
 </div>
 
 <div class="cats" id="catTabs">
-  <button class="cat-tab active" data-cat="all">🦞 全部</button>
-  <button class="cat-tab" data-cat="ice">❄️ 冰鲜</button>
-  <button class="cat-tab" data-cat="live">🐟 活鲜</button>
-  <button class="cat-tab" data-cat="dry">📦 干货</button>
-  <button class="cat-tab" data-cat="gift">🎁 礼盒</button>
+  <button class="cat-tab active" data-cat="all">馃 鍏ㄩ儴</button>
+  <button class="cat-tab" data-cat="ice">鉂勶笍 鍐伴矞</button>
+  <button class="cat-tab" data-cat="live">馃悷 娲婚矞</button>
+  <button class="cat-tab" data-cat="dry">馃摝 骞茶揣</button>
+  <button class="cat-tab" data-cat="gift">馃巵 绀肩洅</button>
 </div>
 
 <div class="products" id="productList"></div>
 
 <div class="footer-bar">
-  <button class="footer-cart-btn" onclick="toggleCart()">🛒<span class="badge" id="footerBadge">0</span></button>
-  <div class="footer-info"><div class="footer-price" id="footerTotal">¥0</div><div class="footer-count" id="footerCount">未选商品</div></div>
-  <button class="footer-checkout" id="footerCheckout" disabled onclick="showOrder()">去结算</button>
+  <button class="footer-cart-btn" onclick="toggleCart()">馃洅<span class="badge" id="footerBadge">0</span></button>
+  <div class="footer-info"><div class="footer-price" id="footerTotal">楼0</div><div class="footer-count" id="footerCount">鏈€夊晢鍝?/div></div>
+  <button class="footer-checkout" id="footerCheckout" disabled onclick="showOrder()">鍘荤粨绠?/button>
 </div>
 
 <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
 <div class="cart-panel" id="cartPanel">
-  <div class="cart-hd"><h3>🛒 购物车</h3><button class="cart-clear" onclick="clearCart()">清空</button></div>
+  <div class="cart-hd"><h3>馃洅 璐墿杞?/h3><button class="cart-clear" onclick="clearCart()">娓呯┖</button></div>
   <div class="cart-items" id="cartItems"></div>
-  <div class="cart-ft"><div class="cart-total"><span>合计</span><span class="price" id="cartTotal">¥0</span></div><button class="checkout-btn" onclick="showOrder()">去结算</button></div>
+  <div class="cart-ft"><div class="cart-total"><span>鍚堣</span><span class="price" id="cartTotal">楼0</span></div><button class="checkout-btn" onclick="showOrder()">鍘荤粨绠?/button></div>
 </div>
 
 <div class="order-overlay" id="orderOverlay">
   <div class="order-form" id="orderForm">
-    <h3>📝 确认订单</h3>
+    <h3>馃摑 纭璁㈠崟</h3>
     <div class="order-summary" id="orderSummary"></div>
-    <div class="fg"><label>联系人 *</label><input type="text" id="ofName" placeholder="您的称呼"></div>
-    <div class="fg"><label>手机号 *</label><input type="tel" id="ofPhone" placeholder="11位手机号"></div>
-    <div class="fg"><label>车牌号</label><input type="text" id="ofCar" placeholder="方便配送员找到您"></div>
-    <div class="fg"><label>取货地点 *</label>
-      <select id="ofLocation"><option value="">请选择取货地点</option>
-        <option>朱家尖蜈蚣峙码头停车场</option><option>朱家尖南沙景区停车场</option>
-        <option>朱家尖东沙停车场</option><option>朱家尖大洞岙车站</option>
-        <option>朱家尖机场停车场</option><option>其他（请备注）</option></select></div>
-    <div class="fg"><label>备注</label><textarea id="ofNote" placeholder="如：大概几点到、特殊要求等"></textarea></div>
-    <div class="pay-section" id="paySection"><div class="pay-label">📱 请扫码支付</div><div class="pay-amount" id="payAmount">¥0</div><img class="pay-qr" id="payQrImg" src="" alt="收款码"><div style="font-size:12px;color:#999;margin-top:4px">支付完成后提交订单</div></div>
-    <div class="btn-row"><button class="btn-cancel" onclick="closeOrder()">取消</button><button class="btn-submit" onclick="submitOrder()">提交订单</button></div>
+    <div class="fg"><label>鑱旂郴浜?*</label><input type="text" id="ofName" placeholder="鎮ㄧ殑绉板懠"></div>
+    <div class="fg"><label>鎵嬫満鍙?*</label><input type="tel" id="ofPhone" placeholder="11浣嶆墜鏈哄彿"></div>
+    <div class="fg"><label>杞︾墝鍙?/label><input type="text" id="ofCar" placeholder="鏂逛究閰嶉€佸憳鎵惧埌鎮?></div>
+    <div class="fg"><label>鍙栬揣鍦扮偣 *</label>
+      <select id="ofLocation"><option value="">璇烽€夋嫨鍙栬揣鍦扮偣</option>
+        <option>鏈卞灏栬湀铓ｅ硻鐮佸ご鍋滆溅鍦?/option><option>鏈卞灏栧崡娌欐櫙鍖哄仠杞﹀満</option>
+        <option>鏈卞灏栦笢娌欏仠杞﹀満</option><option>鏈卞灏栧ぇ娲炲矙杞︾珯</option>
+        <option>鏈卞灏栨満鍦哄仠杞﹀満</option><option>鍏朵粬锛堣澶囨敞锛?/option></select></div>
+    <div class="fg"><label>澶囨敞</label><textarea id="ofNote" placeholder="濡傦細澶ф鍑犵偣鍒般€佺壒娈婅姹傜瓑"></textarea></div>
+    <div class="pay-section" id="paySection"><div class="pay-label">馃摫 璇锋壂鐮佹敮浠?/div><div class="pay-amount" id="payAmount">楼0</div><img class="pay-qr" id="payQrImg" src="" alt="鏀舵鐮?><div style="font-size:12px;color:#999;margin-top:4px">鏀粯瀹屾垚鍚庢彁浜よ鍗?/div></div>
+    <div class="btn-row"><button class="btn-cancel" onclick="closeOrder()">鍙栨秷</button><button class="btn-submit" onclick="submitOrder()">鎻愪氦璁㈠崟</button></div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <div class="login-overlay" id="loginOverlay">
-  <div class="login-card"><h3>🔐 后台管理</h3>
-    <input type="password" id="loginPwd" placeholder="请输入管理密码" onkeydown="if(event.key==='Enter')checkLogin()">
-    <button onclick="checkLogin()">进入后台</button><div class="err" id="loginErr">密码错误</div></div>
+  <div class="login-card"><h3>馃攼 鍚庡彴绠＄悊</h3>
+    <input type="password" id="loginPwd" placeholder="璇疯緭鍏ョ鐞嗗瘑鐮? onkeydown="if(event.key==='Enter')checkLogin()">
+    <button onclick="checkLogin()">杩涘叆鍚庡彴</button><div class="err" id="loginErr">瀵嗙爜閿欒</div></div>
 </div>
 
 <div class="admin-overlay" id="adminOverlay">
-  <div class="admin-hd"><h2>📊 后台管理</h2><button onclick="closeAdmin()">✕ 关闭</button></div>
+  <div class="admin-hd"><h2>馃搳 鍚庡彴绠＄悊</h2><button onclick="closeAdmin()">鉁?鍏抽棴</button></div>
   <div class="admin-body">
     <div class="admin-tabs">
-      <button class="admin-tab active" data-atab="products" onclick="switchTab('products')">📦 商品管理</button>
-      <button class="admin-tab" data-atab="orders" onclick="switchTab('orders')">📋 订单管理</button>
-      <button class="admin-tab" data-atab="settings" onclick="switchTab('settings')">⚙ 系统设置</button>
+      <button class="admin-tab active" data-atab="products" onclick="switchTab('products')">馃摝 鍟嗗搧绠＄悊</button>
+      <button class="admin-tab" data-atab="orders" onclick="switchTab('orders')">馃搵 璁㈠崟绠＄悊</button>
+      <button class="admin-tab" data-atab="settings" onclick="switchTab('settings')">鈿?绯荤粺璁剧疆</button>
     </div>
     <div class="admin-stats">
-      <div class="admin-stat"><div class="n" id="statProducts">0</div><div class="l">商品数</div></div>
-      <div class="admin-stat"><div class="n" id="statOrders">0</div><div class="l">总订单</div></div>
-      <div class="admin-stat"><div class="n" id="statPending">0</div><div class="l">待处理</div></div>
-      <div class="admin-stat"><div class="n" id="statRevenue">¥0</div><div class="l">总营收</div></div>
+      <div class="admin-stat"><div class="n" id="statProducts">0</div><div class="l">鍟嗗搧鏁?/div></div>
+      <div class="admin-stat"><div class="n" id="statOrders">0</div><div class="l">鎬昏鍗?/div></div>
+      <div class="admin-stat"><div class="n" id="statPending">0</div><div class="l">寰呭鐞?/div></div>
+      <div class="admin-stat"><div class="n" id="statRevenue">楼0</div><div class="l">鎬昏惀鏀?/div></div>
     </div>
     <div id="tab-products">
       <div class="admin-toolbar">
-        <select id="afCat" onchange="renderAdminProds()"><option value="all">全部分类</option><option value="ice">冰鲜</option><option value="live">活鲜</option><option value="dry">干货</option><option value="gift">礼盒</option></select>
-        <input type="text" id="afSearch" placeholder="搜索商品..." oninput="renderAdminProds()">
-        <button class="abtn abtn-blue" onclick="openProdForm()">＋ 新增</button></div>
+        <select id="afCat" onchange="renderAdminProds()"><option value="all">鍏ㄩ儴鍒嗙被</option><option value="ice">鍐伴矞</option><option value="live">娲婚矞</option><option value="dry">骞茶揣</option><option value="gift">绀肩洅</option></select>
+        <input type="text" id="afSearch" placeholder="鎼滅储鍟嗗搧..." oninput="renderAdminProds()">
+        <button class="abtn abtn-blue" onclick="openProdForm()">锛?鏂板</button></div>
       <div class="admin-list" id="adminProdList"></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="abtn abtn-outline" onclick="exportData()">📤 导出数据</button>
-        <button class="abtn abtn-outline" onclick="document.getElementById('importFile').click()">📥 导入数据</button>
-        <button class="abtn abtn-red" onclick="resetData()">🔄 恢复默认</button></div>
+        <button class="abtn abtn-outline" onclick="exportData()">馃摛 瀵煎嚭鏁版嵁</button>
+        <button class="abtn abtn-outline" onclick="document.getElementById('importFile').click()">馃摜 瀵煎叆鏁版嵁</button>
+        <button class="abtn abtn-red" onclick="resetData()">馃攧 鎭㈠榛樿</button></div>
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
     </div>
     <div id="tab-orders" style="display:none">
       <div class="admin-toolbar">
-        <select id="ofStatus" onchange="renderAdminOrders()"><option value="all">全部状态</option><option value="pending">待处理</option><option value="paid">已付款</option><option value="delivering">配送中</option><option value="done">已完成</option><option value="cancelled">已取消</option></select>
-        <button class="abtn abtn-outline" onclick="exportOrders()">📤 导出订单</button></div>
+        <select id="ofStatus" onchange="renderAdminOrders()"><option value="all">鍏ㄩ儴鐘舵€?/option><option value="pending">寰呭鐞?/option><option value="paid">宸蹭粯娆?/option><option value="delivering">閰嶉€佷腑</option><option value="done">宸插畬鎴?/option><option value="cancelled">宸插彇娑?/option></select>
+        <button class="abtn abtn-outline" onclick="exportOrders()">馃摛 瀵煎嚭璁㈠崟</button></div>
       <div class="admin-list" id="adminOrderList"></div>
     </div>
     <div id="tab-settings" style="display:none">
-      <div class="settings-card"><h4>🔑 管理密码</h4><div class="sf"><label>新密码</label><input type="text" id="setPwd" placeholder="修改后台管理密码"></div><button class="abtn abtn-blue" onclick="saveSettings()">保存密码</button></div>
-      <div class="settings-card"><h4>💰 收款设置</h4><div class="sf"><label>收款说明</label><textarea id="setPayNote" placeholder="如：支持微信/支付宝扫码支付"></textarea></div>
-        <div class="sf"><label>收款二维码</label><div class="payqr-box" onclick="document.getElementById('payQrInput').click()"><span style="font-size:28px">📷</span><img id="payQrPreview" style="display:none"></div><input type="file" id="payQrInput" accept="image/*" style="display:none" onchange="handlePayQr(this)"></div>
-        <button class="abtn abtn-blue" onclick="saveSettings()">保存收款设置</button></div>
-      <div class="settings-card"><h4>🏪 店铺信息</h4><div class="sf"><label>店铺名称</label><input type="text" id="setShop" placeholder="朱家尖海鲜配送"></div><div class="sf"><label>联系电话</label><input type="tel" id="setPhone" placeholder="客服电话"></div><div class="sf"><label>配送说明</label><textarea id="setDelivery" placeholder="如：下单后30分钟内送达"></textarea></div><button class="abtn abtn-blue" onclick="saveSettings()">保存店铺信息</button></div>
+      <div class="settings-card"><h4>馃攽 绠＄悊瀵嗙爜</h4><div class="sf"><label>鏂板瘑鐮?/label><input type="text" id="setPwd" placeholder="淇敼鍚庡彴绠＄悊瀵嗙爜"></div><button class="abtn abtn-blue" onclick="saveSettings()">淇濆瓨瀵嗙爜</button></div>
+      <div class="settings-card"><h4>馃挵 鏀舵璁剧疆</h4><div class="sf"><label>鏀舵璇存槑</label><textarea id="setPayNote" placeholder="濡傦細鏀寔寰俊/鏀粯瀹濇壂鐮佹敮浠?></textarea></div>
+        <div class="sf"><label>鏀舵浜岀淮鐮?/label><div class="payqr-box" onclick="document.getElementById('payQrInput').click()"><span style="font-size:28px">馃摲</span><img id="payQrPreview" style="display:none"></div><input type="file" id="payQrInput" accept="image/*" style="display:none" onchange="handlePayQr(this)"></div>
+        <button class="abtn abtn-blue" onclick="saveSettings()">淇濆瓨鏀舵璁剧疆</button></div>
+      <div class="settings-card"><h4>馃彧 搴楅摵淇℃伅</h4><div class="sf"><label>搴楅摵鍚嶇О</label><input type="text" id="setShop" placeholder="鏈卞灏栨捣椴滈厤閫?></div><div class="sf"><label>鑱旂郴鐢佃瘽</label><input type="tel" id="setPhone" placeholder="瀹㈡湇鐢佃瘽"></div><div class="sf"><label>閰嶉€佽鏄?/label><textarea id="setDelivery" placeholder="濡傦細涓嬪崟鍚?0鍒嗛挓鍐呴€佽揪"></textarea></div><button class="abtn abtn-blue" onclick="saveSettings()">淇濆瓨搴楅摵淇℃伅</button></div>
     </div>
     <div class="admin-modal" id="prodModal">
-      <div class="admin-card"><h4 id="prodModalTitle">新增商品</h4><input type="hidden" id="pfId">
-        <div class="af"><label>商品名称 *</label><input type="text" id="pfName" placeholder="如：舟山带鱼"></div>
-        <div class="af"><label>分类 *</label><select id="pfCat"><option value="ice">冰鲜</option><option value="live">活鲜</option><option value="dry">干货</option><option value="gift">礼盒</option></select></div>
-        <div class="af"><label>价格 (元) *</label><input type="number" id="pfPrice" placeholder="68" step="0.01" min="0"></div>
-        <div class="af"><label>单位</label><input type="text" id="pfUnit" placeholder="斤 / 条 / 袋"></div>
-        <div class="af"><label>描述</label><input type="text" id="pfDesc" placeholder="简短描述"></div>
-        <div class="af"><label>标签</label><input type="text" id="pfTag" placeholder="爆款 / 招牌 / 时令（可选）"></div>
-        <div class="af"><label>Emoji图标</label><input type="text" id="pfEmoji" placeholder="🐟"></div>
-        <div class="af"><label>商品图片（可选）</label><div class="img-upload" onclick="document.getElementById('pfImgInput').click()"><span>📷</span><small>点击上传商品图</small><img id="pfImgPreview" style="display:none"></div><input type="file" id="pfImgInput" accept="image/*" style="display:none" onchange="previewPfImg(this)"></div>
-        <div class="admin-mactions"><button style="background:#f0f0f0;color:#666" onclick="closeProdForm()">取消</button><button style="background:#0a7cbf;color:#fff" onclick="saveProd()">保存</button></div>
+      <div class="admin-card"><h4 id="prodModalTitle">鏂板鍟嗗搧</h4><input type="hidden" id="pfId">
+        <div class="af"><label>鍟嗗搧鍚嶇О *</label><input type="text" id="pfName" placeholder="濡傦細鑸熷北甯﹂奔"></div>
+        <div class="af"><label>鍒嗙被 *</label><select id="pfCat"><option value="ice">鍐伴矞</option><option value="live">娲婚矞</option><option value="dry">骞茶揣</option><option value="gift">绀肩洅</option></select></div>
+        <div class="af"><label>浠锋牸 (鍏? *</label><input type="number" id="pfPrice" placeholder="68" step="0.01" min="0"></div>
+        <div class="af"><label>鍗曚綅</label><input type="text" id="pfUnit" placeholder="鏂?/ 鏉?/ 琚?></div>
+        <div class="af"><label>鎻忚堪</label><input type="text" id="pfDesc" placeholder="绠€鐭弿杩?></div>
+        <div class="af"><label>鏍囩</label><input type="text" id="pfTag" placeholder="鐖嗘 / 鎷涚墝 / 鏃朵护锛堝彲閫夛級"></div>
+        <div class="af"><label>Emoji鍥炬爣</label><input type="text" id="pfEmoji" placeholder="馃悷"></div>
+        <div class="af"><label>鍟嗗搧鍥剧墖锛堝彲閫夛級</label><div class="img-upload" onclick="document.getElementById('pfImgInput').click()"><span>馃摲</span><small>鐐瑰嚮涓婁紶鍟嗗搧鍥?/small><img id="pfImgPreview" style="display:none"></div><input type="file" id="pfImgInput" accept="image/*" style="display:none" onchange="previewPfImg(this)"></div>
+        <div class="admin-mactions"><button style="background:#f0f0f0;color:#666" onclick="closeProdForm()">鍙栨秷</button><button style="background:#0a7cbf;color:#fff" onclick="saveProd()">淇濆瓨</button></div>
       </div>
     </div>
   </div>
@@ -266,22 +266,22 @@ body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;backgr
 // ============ DATA LAYER ============
 var SK="seafood_shop_products",OK="seafood_shop_orders",STK="seafood_shop_settings",PK="seafood_admin_pwd";
 var defaultProds=[
-  {id:1,name:"舟山带鱼（中段）",cat:"ice",desc:"本地雷达网带鱼，肉嫩鲜美",price:68,unit:"斤",tag:"爆款",emoji:"🐟",img:""},
-  {id:2,name:"东海大黄鱼",cat:"ice",desc:"舟山野生大黄鱼，蒜瓣肉",price:158,unit:"条(500g)",tag:"",emoji:"🐟",img:""},
-  {id:3,name:"舟山鲳鱼",cat:"ice",desc:"平川鲳鱼，刺少肉多",price:88,unit:"斤",tag:"",emoji:"🐟",img:""},
-  {id:4,name:"墨鱼/目鱼",cat:"ice",desc:"新鲜墨鱼，白灼红烧皆可",price:45,unit:"斤",tag:"",emoji:"🦑",img:""},
-  {id:5,name:"红膏呛蟹",cat:"ice",desc:"舟山招牌，咸鲜入味",price:98,unit:"只",tag:"招牌",emoji:"🦀",img:""},
-  {id:6,name:"舟山梭子蟹",cat:"live",desc:"鲜活梭子蟹，膏肥肉满",price:128,unit:"斤",tag:"时令",emoji:"🦀",img:""},
-  {id:7,name:"皮皮虾/虾蛄",cat:"live",desc:"鲜活虾蛄，椒盐一绝",price:78,unit:"斤",tag:"",emoji:"🦐",img:""},
-  {id:8,name:"基围虾",cat:"live",desc:"活蹦乱跳，白灼最佳",price:68,unit:"斤",tag:"",emoji:"🦐",img:""},
-  {id:9,name:"花蛤/文蛤",cat:"live",desc:"吐好沙的，辣炒鲜美",price:18,unit:"斤",tag:"实惠",emoji:"🐚",img:""},
-  {id:10,name:"舟山虾皮",cat:"dry",desc:"淡干虾皮，补钙首选",price:35,unit:"袋(250g)",tag:"必买",emoji:"🦐",img:""},
-  {id:11,name:"鱿鱼丝/墨鱼丝",cat:"dry",desc:"即食海鲜零食，追剧必备",price:28,unit:"袋(200g)",tag:"",emoji:"🦑",img:""},
-  {id:12,name:"紫菜（头水）",cat:"dry",desc:"头水紫菜，煮汤鲜掉眉毛",price:32,unit:"包(100g)",tag:"",emoji:"🌿",img:""},
-  {id:13,name:"舟山鱼片干",cat:"dry",desc:"马鲛鱼片干，嚼劲十足",price:25,unit:"袋(200g)",tag:"",emoji:"🐟",img:""},
-  {id:14,name:"海鲜零食礼包",cat:"gift",desc:"虾皮+鱿鱼丝+鱼片+紫菜组合",price:108,unit:"套",tag:"送礼",emoji:"🎁",img:""},
-  {id:15,name:"冰鲜三件套",cat:"gift",desc:"带鱼+鲳鱼+墨鱼，泡沫箱打包",price:188,unit:"套",tag:"划算",emoji:"🎁",img:""},
-  {id:16,name:"豪华海鲜礼盒",cat:"gift",desc:"黄鱼+梭子蟹+带鱼+鲳鱼+虾皮",price:388,unit:"套",tag:"高端",emoji:"🎁",img:""}
+  {id:1,name:"鑸熷北甯﹂奔锛堜腑娈碉級",cat:"ice",desc:"鏈湴闆疯揪缃戝甫楸硷紝鑲夊椴滅編",price:68,unit:"鏂?,tag:"鐖嗘",emoji:"馃悷",img:""},
+  {id:2,name:"涓滄捣澶ч粍楸?,cat:"ice",desc:"鑸熷北閲庣敓澶ч粍楸硷紝钂滅摚鑲?,price:158,unit:"鏉?500g)",tag:"",emoji:"馃悷",img:""},
+  {id:3,name:"鑸熷北椴抽奔",cat:"ice",desc:"骞冲窛椴抽奔锛屽埡灏戣倝澶?,price:88,unit:"鏂?,tag:"",emoji:"馃悷",img:""},
+  {id:4,name:"澧ㄩ奔/鐩奔",cat:"ice",desc:"鏂伴矞澧ㄩ奔锛岀櫧鐏肩孩鐑х殕鍙?,price:45,unit:"鏂?,tag:"",emoji:"馃",img:""},
+  {id:5,name:"绾㈣啅鍛涜煿",cat:"ice",desc:"鑸熷北鎷涚墝锛屽捀椴滃叆鍛?,price:98,unit:"鍙?,tag:"鎷涚墝",emoji:"馃",img:""},
+  {id:6,name:"鑸熷北姊瓙锜?,cat:"live",desc:"椴滄椿姊瓙锜癸紝鑶忚偉鑲夋弧",price:128,unit:"鏂?,tag:"鏃朵护",emoji:"馃",img:""},
+  {id:7,name:"鐨毊铏?铏捐泟",cat:"live",desc:"椴滄椿铏捐泟锛屾鐩愪竴缁?,price:78,unit:"鏂?,tag:"",emoji:"馃",img:""},
+  {id:8,name:"鍩哄洿铏?,cat:"live",desc:"娲昏功涔辫烦锛岀櫧鐏兼渶浣?,price:68,unit:"鏂?,tag:"",emoji:"馃",img:""},
+  {id:9,name:"鑺辫洡/鏂囪洡",cat:"live",desc:"鍚愬ソ娌欑殑锛岃荆鐐掗矞缇?,price:18,unit:"鏂?,tag:"瀹炴儬",emoji:"馃悮",img:""},
+  {id:10,name:"鑸熷北铏剧毊",cat:"dry",desc:"娣″共铏剧毊锛岃ˉ閽欓閫?,price:35,unit:"琚?250g)",tag:"蹇呬拱",emoji:"馃",img:""},
+  {id:11,name:"楸块奔涓?澧ㄩ奔涓?,cat:"dry",desc:"鍗抽娴烽矞闆堕锛岃拷鍓у繀澶?,price:28,unit:"琚?200g)",tag:"",emoji:"馃",img:""},
+  {id:12,name:"绱彍锛堝ご姘达級",cat:"dry",desc:"澶存按绱彍锛岀叜姹ら矞鎺夌湁姣?,price:32,unit:"鍖?100g)",tag:"",emoji:"馃尶",img:""},
+  {id:13,name:"鑸熷北楸肩墖骞?,cat:"dry",desc:"椹矝楸肩墖骞诧紝鍤煎姴鍗佽冻",price:25,unit:"琚?200g)",tag:"",emoji:"馃悷",img:""},
+  {id:14,name:"娴烽矞闆堕绀煎寘",cat:"gift",desc:"铏剧毊+楸块奔涓?楸肩墖+绱彍缁勫悎",price:108,unit:"濂?,tag:"閫佺ぜ",emoji:"馃巵",img:""},
+  {id:15,name:"鍐伴矞涓変欢濂?,cat:"gift",desc:"甯﹂奔+椴抽奔+澧ㄩ奔锛屾场娌鎵撳寘",price:188,unit:"濂?,tag:"鍒掔畻",emoji:"馃巵",img:""},
+  {id:16,name:"璞崕娴烽矞绀肩洅",cat:"gift",desc:"榛勯奔+姊瓙锜?甯﹂奔+椴抽奔+铏剧毊",price:388,unit:"濂?,tag:"楂樼",emoji:"馃巵",img:""}
 ];
 
 function loadP(){
@@ -302,35 +302,35 @@ var products=loadP(),cart=[],curCat="all",tmpImg=null;
 function renderP(){
   var el=document.getElementById("productList");
   var f=curCat==="all"?products:products.filter(function(p){return p.cat===curCat});
-  if(!f.length){el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:#999">暂无商品</div>';return}
+  if(!f.length){el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:#999">鏆傛棤鍟嗗搧</div>';return}
   el.innerHTML=f.map(function(p){
-    var ih=p.img?'<img src="'+p.img+'" style="width:100%;height:100%;object-fit:cover">':'<span class="emoji">'+(p.emoji||"🐟")+'</span>';
-    return '<div class="product-card"><div class="product-img">'+ih+(p.tag?'<span class="tag">'+p.tag+'</span>':'')+'</div><div class="product-info"><div class="product-name">'+p.name+'</div><div class="product-desc">'+p.desc+'</div><div class="product-bottom"><div><span class="product-price">¥'+p.price+'</span><span class="product-unit"> /'+p.unit+'</span></div><button class="add-btn" onclick="addCart('+p.id+')">+</button></div></div></div>';
+    var ih=p.img?'<img src="'+p.img+'" style="width:100%;height:100%;object-fit:cover">':'<span class="emoji">'+(p.emoji||"馃悷")+'</span>';
+    return '<div class="product-card"><div class="product-img">'+ih+(p.tag?'<span class="tag">'+p.tag+'</span>':'')+'</div><div class="product-info"><div class="product-name">'+p.name+'</div><div class="product-desc">'+p.desc+'</div><div class="product-bottom"><div><span class="product-price">楼'+p.price+'</span><span class="product-unit"> /'+p.unit+'</span></div><button class="add-btn" onclick="addCart('+p.id+')">+</button></div></div></div>';
   }).join("");
 }
 function addCart(id){
   var p=products.filter(function(x){return x.id===id})[0];if(!p)return;
   var e=cart.filter(function(x){return x.id===id})[0];
   if(e)e.qty++;else cart.push({id:p.id,name:p.name,price:p.price,unit:p.unit,emoji:p.emoji,img:p.img,qty:1});
-  renderCart();toast("已加入："+p.name);
+  renderCart();toast("宸插姞鍏ワ細"+p.name);
 }
 function chQty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);renderCart()}
 function clearCart(){cart=[];renderCart()}
 function renderCart(){
   var c=document.getElementById("cartItems");
-  if(!cart.length){c.innerHTML='<div class="cart-empty">🛒<p style="font-size:14px;color:#999;margin-top:8px">购物车是空的</p></div>'}
+  if(!cart.length){c.innerHTML='<div class="cart-empty">馃洅<p style="font-size:14px;color:#999;margin-top:8px">璐墿杞︽槸绌虹殑</p></div>'}
   else{c.innerHTML=cart.map(function(it,i){
-    var ig=it.img?'<img src="'+it.img+'" style="width:100%;height:100%;object-fit:cover">':'<span style="font-size:32px">'+(it.emoji||"🐟")+'</span>';
-    return '<div class="cart-item"><div class="cimg">'+ig+'</div><div class="cinfo"><div class="cname">'+it.name+'</div><div class="cprice">¥'+it.price+'/'+it.unit+'</div></div><div class="cart-qty"><button class="qty-btn" onclick="chQty('+i+',-1)">-</button><span class="qty-num">'+it.qty+'</span><button class="qty-btn" onclick="chQty('+i+',1)">+</button></div></div>';
+    var ig=it.img?'<img src="'+it.img+'" style="width:100%;height:100%;object-fit:cover">':'<span style="font-size:32px">'+(it.emoji||"馃悷")+'</span>';
+    return '<div class="cart-item"><div class="cimg">'+ig+'</div><div class="cinfo"><div class="cname">'+it.name+'</div><div class="cprice">楼'+it.price+'/'+it.unit+'</div></div><div class="cart-qty"><button class="qty-btn" onclick="chQty('+i+',-1)">-</button><span class="qty-num">'+it.qty+'</span><button class="qty-btn" onclick="chQty('+i+',1)">+</button></div></div>';
   }).join("")}
   updTotals();
 }
 function updTotals(){
   var n=cart.reduce(function(s,i){return s+i.qty},0);
   var t=cart.reduce(function(s,i){return s+i.price*i.qty},0);
-  document.getElementById("cartTotal").textContent="¥"+t;
-  document.getElementById("footerTotal").textContent="¥"+t;
-  document.getElementById("footerCount").textContent=n?"共"+n+"件商品":"未选商品";
+  document.getElementById("cartTotal").textContent="楼"+t;
+  document.getElementById("footerTotal").textContent="楼"+t;
+  document.getElementById("footerCount").textContent=n?"鍏?+n+"浠跺晢鍝?:"鏈€夊晢鍝?;
   var b=document.getElementById("footerBadge");
   if(n){b.style.display="flex";b.textContent=n>99?"99+":n}else{b.style.display="none"}
   document.getElementById("footerCheckout").disabled=!n;
@@ -342,12 +342,12 @@ function toggleCart(){document.getElementById("cartOverlay").classList.toggle("s
 function showOrder(){
   if(!cart.length)return;toggleCart();
   var t=cart.reduce(function(s,i){return s+i.price*i.qty},0);
-  var s='<div style="font-weight:600;margin-bottom:6px">订单明细</div>';
-  cart.forEach(function(it){s+='<div class="row"><span>'+it.name+' ×'+it.qty+'</span><span>¥'+(it.price*it.qty)+'</span></div>'});
-  s+='<div class="row total"><span>合计</span><span>¥'+t+'</span></div>';
+  var s='<div style="font-weight:600;margin-bottom:6px">璁㈠崟鏄庣粏</div>';
+  cart.forEach(function(it){s+='<div class="row"><span>'+it.name+' 脳'+it.qty+'</span><span>楼'+(it.price*it.qty)+'</span></div>'});
+  s+='<div class="row total"><span>鍚堣</span><span>楼'+t+'</span></div>';
   document.getElementById("orderSummary").innerHTML=s;
   var st=loadS();
-  if(st.payQr){document.getElementById("paySection").style.display="block";document.getElementById("payAmount").textContent="¥"+t;document.getElementById("payQrImg").src=st.payQr}
+  if(st.payQr){document.getElementById("paySection").style.display="block";document.getElementById("payAmount").textContent="楼"+t;document.getElementById("payQrImg").src=st.payQr}
   else{document.getElementById("paySection").style.display="none"}
   document.getElementById("orderOverlay").classList.add("show");
 }
@@ -356,14 +356,14 @@ function submitOrder(){
   var nm=document.getElementById("ofName").value.trim();
   var ph=document.getElementById("ofPhone").value.trim();
   var loc=document.getElementById("ofLocation").value;
-  if(!nm){toast("请填写联系人");return}
-  if(!ph||!/^1\d{10}$/.test(ph)){toast("请填写正确的手机号");return}
-  if(!loc){toast("请选择取货地点");return}
+  if(!nm){toast("璇峰～鍐欒仈绯讳汉");return}
+  if(!ph||!/^1\d{10}$/.test(ph)){toast("璇峰～鍐欐纭殑鎵嬫満鍙?);return}
+  if(!loc){toast("璇烽€夋嫨鍙栬揣鍦扮偣");return}
   var t=cart.reduce(function(s,i){return s+i.price*i.qty},0);
   var o={id:"ORD"+Date.now().toString(36).toUpperCase(),time:new Date().toLocaleString("zh-CN"),status:"pending",items:cart.map(function(i){return{name:i.name,price:i.price,qty:i.qty}}),total:t,name:nm,phone:ph,car:document.getElementById("ofCar").value.trim(),location:loc,note:document.getElementById("ofNote").value.trim()};
   var os=loadO();os.unshift(o);saveO(os);
   cart=[];renderCart();closeOrder();
-  toast("下单成功！我们会尽快联系您");
+  toast("涓嬪崟鎴愬姛锛佹垜浠細灏藉揩鑱旂郴鎮?);
   ["ofName","ofPhone","ofCar","ofNote"].forEach(function(id){document.getElementById(id).value=""});
 }
 
@@ -401,7 +401,7 @@ function refreshStats(){
   document.getElementById("statProducts").textContent=p.length;
   document.getElementById("statOrders").textContent=os.length;
   document.getElementById("statPending").textContent=os.filter(function(o){return o.status==="pending"}).length;
-  document.getElementById("statRevenue").textContent="¥"+os.filter(function(o){return o.status!=="cancelled"}).reduce(function(s,o){return s+o.total},0);
+  document.getElementById("statRevenue").textContent="楼"+os.filter(function(o){return o.status!=="cancelled"}).reduce(function(s,o){return s+o.total},0);
 }
 
 // ============ ADMIN PRODUCTS ============
@@ -410,24 +410,24 @@ function renderAdminProds(){
   var cat=document.getElementById("afCat").value,se=(document.getElementById("afSearch").value||"").toLowerCase();
   if(cat!=="all")p=p.filter(function(x){return x.cat===cat});
   if(se)p=p.filter(function(x){return x.name.toLowerCase().indexOf(se)>=0||x.desc.toLowerCase().indexOf(se)>=0});
-  if(!p.length){el.innerHTML='<div style="padding:20px;text-align:center;color:#999">暂无匹配商品</div>';return}
-  var cm={ice:"冰鲜",live:"活鲜",dry:"干货",gift:"礼盒"};
+  if(!p.length){el.innerHTML='<div style="padding:20px;text-align:center;color:#999">鏆傛棤鍖归厤鍟嗗搧</div>';return}
+  var cm={ice:"鍐伴矞",live:"娲婚矞",dry:"骞茶揣",gift:"绀肩洅"};
   el.innerHTML=p.map(function(x){
-    var ih=x.img?'<img src="'+x.img+'" style="width:100%;height:100%;object-fit:cover">':'<span style="font-size:20px">'+(x.emoji||"🐟")+'</span>';
-    return '<div class="admin-item"><div class="aimg">'+ih+'</div><div class="ainfo"><div class="n">'+x.name+(x.tag?' <span style="font-size:10px;color:#ff6b35">['+x.tag+']</span>':'')+'</div><div class="d">'+(cm[x.cat]||x.cat)+' · '+x.desc+'</div></div><div class="aprice">¥'+x.price+'<span style="font-size:11px;color:#999">/'+x.unit+'</span></div><div class="aacts"><button onclick="editProd('+x.id+')" title="编辑">✏️</button><button onclick="delProd('+x.id+')" title="删除" style="color:#dc3545">🗑</button></div></div>';
+    var ih=x.img?'<img src="'+x.img+'" style="width:100%;height:100%;object-fit:cover">':'<span style="font-size:20px">'+(x.emoji||"馃悷")+'</span>';
+    return '<div class="admin-item"><div class="aimg">'+ih+'</div><div class="ainfo"><div class="n">'+x.name+(x.tag?' <span style="font-size:10px;color:#ff6b35">['+x.tag+']</span>':'')+'</div><div class="d">'+(cm[x.cat]||x.cat)+' 路 '+x.desc+'</div></div><div class="aprice">楼'+x.price+'<span style="font-size:11px;color:#999">/'+x.unit+'</span></div><div class="aacts"><button onclick="editProd('+x.id+')" title="缂栬緫">鉁忥笍</button><button onclick="delProd('+x.id+')" title="鍒犻櫎" style="color:#dc3545">馃棏</button></div></div>';
   }).join("");refreshStats();
 }
 function openProdForm(){
-  document.getElementById("prodModalTitle").textContent="新增商品";document.getElementById("pfId").value="";
+  document.getElementById("prodModalTitle").textContent="鏂板鍟嗗搧";document.getElementById("pfId").value="";
   document.getElementById("pfName").value="";document.getElementById("pfCat").value="ice";
-  document.getElementById("pfPrice").value="";document.getElementById("pfUnit").value="斤";
+  document.getElementById("pfPrice").value="";document.getElementById("pfUnit").value="鏂?;
   document.getElementById("pfDesc").value="";document.getElementById("pfTag").value="";document.getElementById("pfEmoji").value="";
   document.getElementById("pfImgPreview").style.display="none";tmpImg=null;
   document.getElementById("prodModal").classList.add("show");
 }
 function editProd(id){
   var p=loadP().filter(function(x){return x.id===id})[0];if(!p)return;
-  document.getElementById("prodModalTitle").textContent="编辑商品";document.getElementById("pfId").value=p.id;
+  document.getElementById("prodModalTitle").textContent="缂栬緫鍟嗗搧";document.getElementById("pfId").value=p.id;
   document.getElementById("pfName").value=p.name;document.getElementById("pfCat").value=p.cat;
   document.getElementById("pfPrice").value=p.price;document.getElementById("pfUnit").value=p.unit;
   document.getElementById("pfDesc").value=p.desc||"";document.getElementById("pfTag").value=p.tag||"";document.getElementById("pfEmoji").value=p.emoji||"";
@@ -446,32 +446,32 @@ function saveProd(){
   var cat=document.getElementById("pfCat").value;
   var price=parseFloat(document.getElementById("pfPrice").value);
   var unit=document.getElementById("pfUnit").value.trim();
-  if(!nm){toast("请输入商品名称");return}if(isNaN(price)||price<0){toast("请输入有效价格");return}
+  if(!nm){toast("璇疯緭鍏ュ晢鍝佸悕绉?);return}if(isNaN(price)||price<0){toast("璇疯緭鍏ユ湁鏁堜环鏍?);return}
   var list=loadP();
   if(id){id=parseInt(id);for(var i=0;i<list.length;i++)if(list[i].id===id){list[i].name=nm;list[i].cat=cat;list[i].price=price;list[i].unit=unit;list[i].desc=document.getElementById("pfDesc").value.trim();list[i].tag=document.getElementById("pfTag").value.trim();list[i].emoji=document.getElementById("pfEmoji").value.trim();list[i].img=tmpImg!==null?tmpImg:(list[i].img||"");break}}
   else{var mx=list.reduce(function(m,x){return Math.max(m,x.id)},0);list.push({id:mx+1,name:nm,cat:cat,price:price,unit:unit,desc:document.getElementById("pfDesc").value.trim(),tag:document.getElementById("pfTag").value.trim(),emoji:document.getElementById("pfEmoji").value.trim(),img:tmpImg||""})}
-  saveP(list);products=loadP();renderP();renderAdminProds();closeProdForm();toast("商品已保存");
+  saveP(list);products=loadP();renderP();renderAdminProds();closeProdForm();toast("鍟嗗搧宸蹭繚瀛?);
 }
-function delProd(id){if(!confirm("确定删除该商品？"))return;var l=loadP().filter(function(x){return x.id!==id});saveP(l);products=loadP();renderP();renderAdminProds();toast("已删除")}
+function delProd(id){if(!confirm("纭畾鍒犻櫎璇ュ晢鍝侊紵"))return;var l=loadP().filter(function(x){return x.id!==id});saveP(l);products=loadP();renderP();renderAdminProds();toast("宸插垹闄?)}
 
 // ============ ADMIN ORDERS ============
 function renderAdminOrders(){
   var el=document.getElementById("adminOrderList"),os=loadO();
   var st=document.getElementById("ofStatus").value;
   if(st!=="all")os=os.filter(function(o){return o.status===st});
-  if(!os.length){el.innerHTML='<div style="padding:20px;text-align:center;color:#999">暂无订单</div>';return}
-  var sm={pending:"🔴 待处理",paid:"🟡 已付款",delivering:"🔵 配送中",done:"✅ 已完成",cancelled:"⚫ 已取消"};
+  if(!os.length){el.innerHTML='<div style="padding:20px;text-align:center;color:#999">鏆傛棤璁㈠崟</div>';return}
+  var sm={pending:"馃敶 寰呭鐞?,paid:"馃煛 宸蹭粯娆?,delivering:"馃數 閰嶉€佷腑",done:"鉁?宸插畬鎴?,cancelled:"鈿?宸插彇娑?};
   el.innerHTML=os.map(function(o){
-    var is=o.items.map(function(i){return i.name+"×"+i.qty}).join("、");
-    return '<div class="admin-item"><div class="ainfo"><div class="n">'+o.id+' <span style="font-size:11px;color:#999">'+o.time+'</span></div><div class="d">'+is+' · ¥'+o.total+' · '+o.name+' · '+o.phone+'</div><div class="d">📍'+o.location+(o.car?' · 🚗'+o.car:'')+(o.note?' · 💬'+o.note:'')+'</div></div><div style="text-align:right;white-space:nowrap"><div style="font-size:12px;font-weight:600">'+(sm[o.status]||o.status)+'</div><div style="margin-top:4px">'
-      +(o.status==="pending"?'<button class="abtn abtn-green" style="font-size:10px;padding:3px 8px" onclick="updOrder(\''+o.id+'\',\'paid\')">标记付款</button> ':'')
-      +(o.status==="paid"?'<button class="abtn abtn-blue" style="font-size:10px;padding:3px 8px" onclick="updOrder(\''+o.id+'\',\'delivering\')">开始配送</button> ':'')
-      +(o.status==="delivering"?'<button class="abtn abtn-green" style="font-size:10px;padding:3px 8px" onclick="updOrder(\''+o.id+'\',\'done\')">完成</button> ':'')
-      +((o.status==="pending"||o.status==="paid")?'<button class="abtn abtn-red" style="font-size:10px;padding:3px 8px" onclick="updOrder(\''+o.id+'\',\'cancelled\')">取消</button>':'')
+    var is=o.items.map(function(i){return i.name+"脳"+i.qty}).join("銆?);
+    return '<div class="admin-item"><div class="ainfo"><div class="n">'+o.id+' <span style="font-size:11px;color:#999">'+o.time+'</span></div><div class="d">'+is+' 路 楼'+o.total+' 路 '+o.name+' 路 '+o.phone+'</div><div class="d">馃搷'+o.location+(o.car?' 路 馃殫'+o.car:'')+(o.note?' 路 馃挰'+o.note:'')+'</div></div><div style="text-align:right;white-space:nowrap"><div style="font-size:12px;font-weight:600">'+(sm[o.status]||o.status)+'</div><div style="margin-top:4px">'
+      +(o.status==="pending"?'<button class="abtn abtn-green" style="font-size:10px;padding:3px 8px" onclick="updOrder(\''+o.id+'\',\'paid\')">鏍囪浠樻</button> ':'')
+      +(o.status==="paid"?'<button class="abtn abtn-blue" style="font-size:10px;padding:3px 8px" onclick="updOrder(\''+o.id+'\',\'delivering\')">寮€濮嬮厤閫?/button> ':'')
+      +(o.status==="delivering"?'<button class="abtn abtn-green" style="font-size:10px;padding:3px 8px" onclick="updOrder(\''+o.id+'\',\'done\')">瀹屾垚</button> ':'')
+      +((o.status==="pending"||o.status==="paid")?'<button class="abtn abtn-red" style="font-size:10px;padding:3px 8px" onclick="updOrder(\''+o.id+'\',\'cancelled\')">鍙栨秷</button>':'')
       +'</div></div></div>';
   }).join("");refreshStats();
 }
-function updOrder(id,st){var os=loadO();for(var i=0;i<os.length;i++)if(os[i].id===id){os[i].status=st;break}saveO(os);renderAdminOrders();toast("订单状态已更新")}
+function updOrder(id,st){var os=loadO();for(var i=0;i<os.length;i++)if(os[i].id===id){os[i].status=st;break}saveO(os);renderAdminOrders();toast("璁㈠崟鐘舵€佸凡鏇存柊")}
 
 // ============ ADMIN SETTINGS ============
 function loadStoForm(){
@@ -489,23 +489,23 @@ function saveSettings(){
   var pwd=document.getElementById("setPwd").value.trim();if(pwd)localStorage.setItem(PK,pwd);
   var pr=document.getElementById("payQrPreview");
   var s={shopName:document.getElementById("setShop").value.trim(),phone:document.getElementById("setPhone").value.trim(),deliveryNote:document.getElementById("setDelivery").value.trim(),payNote:document.getElementById("setPayNote").value.trim(),payQr:pr.style.display!=="none"?pr.src:""};
-  saveS(s);toast("设置已保存"+(pwd?"，密码已更新":""));document.getElementById("setPwd").value="";
+  saveS(s);toast("璁剧疆宸蹭繚瀛?+(pwd?"锛屽瘑鐮佸凡鏇存柊":""));document.getElementById("setPwd").value="";
 }
 
 // ============ IMPORT/EXPORT ============
 function exportData(){
   var d={products:loadP(),orders:loadO(),settings:loadS()};
   var b=new Blob([JSON.stringify(d,null,2)],{type:"application/json"});
-  var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="seafood_backup_"+new Date().toISOString().slice(0,10)+".json";a.click();toast("数据已导出");
+  var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="seafood_backup_"+new Date().toISOString().slice(0,10)+".json";a.click();toast("鏁版嵁宸插鍑?);
 }
 function importData(inp){
   if(!inp.files||!inp.files[0])return;var r=new FileReader();
-  r.onload=function(e){try{var d=JSON.parse(e.target.result);if(d.products){saveP(d.products);products=loadP();renderP()}if(d.orders)saveO(d.orders);if(d.settings)saveS(d.settings);renderAdminProds();renderAdminOrders();refreshStats();toast("导入成功")}catch(ex){toast("导入失败，文件格式不正确")}};r.readAsText(inp.files[0]);inp.value="";
+  r.onload=function(e){try{var d=JSON.parse(e.target.result);if(d.products){saveP(d.products);products=loadP();renderP()}if(d.orders)saveO(d.orders);if(d.settings)saveS(d.settings);renderAdminProds();renderAdminOrders();refreshStats();toast("瀵煎叆鎴愬姛")}catch(ex){toast("瀵煎叆澶辫触锛屾枃浠舵牸寮忎笉姝ｇ‘")}};r.readAsText(inp.files[0]);inp.value="";
 }
-function resetData(){if(!confirm("确定恢复默认商品数据？"))return;saveP(JSON.parse(JSON.stringify(defaultProds)));products=loadP();renderP();renderAdminProds();toast("已恢复默认")}
+function resetData(){if(!confirm("纭畾鎭㈠榛樿鍟嗗搧鏁版嵁锛?))return;saveP(JSON.parse(JSON.stringify(defaultProds)));products=loadP();renderP();renderAdminProds();toast("宸叉仮澶嶉粯璁?)}
 function exportOrders(){
   var os=loadO();var b=new Blob([JSON.stringify(os,null,2)],{type:"application/json"});
-  var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="orders_"+new Date().toISOString().slice(0,10)+".json";a.click();toast("订单已导出");
+  var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="orders_"+new Date().toISOString().slice(0,10)+".json";a.click();toast("璁㈠崟宸插鍑?);
 }
 
 // ============ SYNC ============
