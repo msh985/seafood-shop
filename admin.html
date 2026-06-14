@@ -157,7 +157,8 @@ tr:hover td { background:#fafcfd; }
 
       <div class="toolbar">
         <input type="text" id="searchInput" placeholder="🔍 搜索商品..." oninput="renderTable()">
-        <select id="filterCat" onchange="renderTable()">
+        <select id="filterStatus" onchange="renderTable()" style="padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;"><option value="all">全部状态</option><option value="published">已上架</option><option value="unpublished">已下架</option></select>
+          <select id="filterCat" onchange="renderTable()">
           <option value="all">全部分类</option>
           <option value="ice">🧊 冰鲜</option>
           <option value="live">🦀 活鲜</option>
@@ -382,6 +383,9 @@ function renderTable() {
 
   if (search) products = products.filter(p => p.name.toLowerCase().includes(search));
   if (filter !== "all") products = products.filter(p => p.cat === filter);
+  var statusFilter = document.getElementById("filterStatus");
+  if (statusFilter && statusFilter.value === "published") products = products.filter(function(p){ return p.published !== false; });
+  if (statusFilter && statusFilter.value === "unpublished") products = products.filter(function(p){ return p.published === false; });
 
   products.sort((a,b) => (a.sort||0) - (b.sort||0));
 
@@ -406,7 +410,7 @@ function renderTable() {
         <td style="color:#888;">${p.unit}</td>
         <td>${p.tag ? `<span class="tag-badge">${p.tag}</span>` : '-'}</td>
         <td>
-          <button class="btn btn-outline btn-sm" onclick="openEditModal(${p.id})">✏️</button>
+          <button class="btn btn-outline btn-sm" onclick="togglePublish(${p.id})" style="font-size:14px;" title="上架/下架">${p.published!==false ? "🔴" : "🟢"}</button>\r\n          <button class="btn btn-outline btn-sm" onclick="openEditModal(${p.id})">✏️</button>
           <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">🗑</button>
         </td>
       </tr>
