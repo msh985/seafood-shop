@@ -251,7 +251,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 <body>
 
 <div class="header">
-  <div class="header-top"><a href="#" onclick="showAdminLogin();return false;" style="float:right;color:#fff;background:rgba(255,255,255,.2);padding:4px 12px;border-radius:14px;font-size:12px;text-decoration:none;margin-top:4px;">⚙ 管理</a>
+  <div class="header-top"><a href="admin.html" style="float:right;color:#fff;background:rgba(255,255,255,.2);padding:4px 12px;border-radius:14px;font-size:12px;text-decoration:none;margin-top:4px;">⚙ 管理</a>
     <div>
       <h1>🦐 朱家尖海鲜配送</h1>
       <div class="header-sub">扫码下单 · 配送到车 · 新鲜保证</div>
@@ -498,8 +498,8 @@ function addToCart(id) {
   renderCart();
 (function(){
   var btn=document.querySelector('.admin-toggle');
-  if(btn)btn.addEventListener('click',function(e){e.preventDefault();showAdminLogin();});
-  if(location.hash==='#admin')showAdminLogin();
+  if(btn)btn.addEventListener('click',function(e){e.preventDefault();location.href='admin.html';});
+  if(location.hash==='#admin')location.href='admin.html';
 })();
   showToast(`已加入：${p.name}`);
 }
@@ -510,16 +510,16 @@ function changeQty(idx, delta) {
   renderCart();
 (function(){
   var btn=document.querySelector('.admin-toggle');
-  if(btn)btn.addEventListener('click',function(e){e.preventDefault();showAdminLogin();});
-  if(location.hash==='#admin')showAdminLogin();
+  if(btn)btn.addEventListener('click',function(e){e.preventDefault();location.href='admin.html';});
+  if(location.hash==='#admin')location.href='admin.html';
 })();
 }
 
 function clearCart() { cart=[]; renderCart();
 (function(){
   var btn=document.querySelector('.admin-toggle');
-  if(btn)btn.addEventListener('click',function(e){e.preventDefault();showAdminLogin();});
-  if(location.hash==='#admin')showAdminLogin();
+  if(btn)btn.addEventListener('click',function(e){e.preventDefault();location.href='admin.html';});
+  if(location.hash==='#admin')location.href='admin.html';
 })(); showToast("购物车已清空"); }
 
 function toggleCart() {
@@ -528,8 +528,8 @@ function toggleCart() {
   renderCart();
 (function(){
   var btn=document.querySelector('.admin-toggle');
-  if(btn)btn.addEventListener('click',function(e){e.preventDefault();showAdminLogin();});
-  if(location.hash==='#admin')showAdminLogin();
+  if(btn)btn.addEventListener('click',function(e){e.preventDefault();location.href='admin.html';});
+  if(location.hash==='#admin')location.href='admin.html';
 })();
 }
 
@@ -578,8 +578,8 @@ function submitOrder() {
   cart = []; renderCart();
 (function(){
   var btn=document.querySelector('.admin-toggle');
-  if(btn)btn.addEventListener('click',function(e){e.preventDefault();showAdminLogin();});
-  if(location.hash==='#admin')showAdminLogin();
+  if(btn)btn.addEventListener('click',function(e){e.preventDefault();location.href='admin.html';});
+  if(location.hash==='#admin')location.href='admin.html';
 })();
   document.getElementById("inputName").value = "";
   document.getElementById("inputPhone").value = "";
@@ -923,12 +923,12 @@ function handleAdminPayQr(e) {
 try { renderProducts(); } catch(e) { console.warn(e); } try { renderCart(); } catch(e) { console.warn(e); }
 (function(){
   var btn=document.querySelector('.admin-toggle');
-  if(btn)btn.addEventListener('click',function(e){e.preventDefault();showAdminLogin();});
-  if(location.hash==='#admin')showAdminLogin();
+  if(btn)btn.addEventListener('click',function(e){e.preventDefault();location.href='admin.html';});
+  if(location.hash==='#admin')location.href='admin.html';
 })();
 </script>
 <!-- Admin toggle -->
-<button class="admin-toggle" onclick="showAdminLogin()" title="管理">⚙</button>
+<button class="admin-toggle" onclick="location.href='admin.html'" title="管理">⚙</button>
 
 <!-- Admin Panel -->
 <div class="admin-overlay" id="adminOverlay">
