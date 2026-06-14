@@ -251,7 +251,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 <body>
 
 <div class="header">
-  <div class="header-top">
+  <div class="header-top"><a href="javascript:showAdminLogin()" style="float:right;color:#fff;background:rgba(255,255,255,.2);padding:4px 12px;border-radius:14px;font-size:12px;text-decoration:none;margin-top:4px;">⚙ 管理</a>
     <div>
       <h1>🦐 朱家尖海鲜配送</h1>
       <div class="header-sub">扫码下单 · 配送到车 · 新鲜保证</div>
@@ -421,7 +421,7 @@ const defaultProducts = [
   { id:16, name:"豪华海鲜礼盒", cat:"gift", imgKey:"礼盒", desc:"黄鱼+梭子蟹+带鱼+鲳鱼+虾皮", price:388, unit:"套", tag:"高端" }
 ];
 
-];
+
 
 let products = loadShopProducts();
 let cart = [];
@@ -496,6 +496,13 @@ function addToCart(id) {
   if (existing) { existing.qty++; }
   else { cart.push({ id:p.id, name:p.name, imgKey:p.imgKey, img:p.img, price:p.price, unit:p.unit, qty:1 }); }
   renderCart();
+// Robust admin toggle listener
+(function(){
+  var btn = document.querySelector(".admin-toggle");
+  if(btn) { btn.addEventListener("click", function(e){ e.preventDefault(); showAdminLogin(); }); }
+  // Also support URL hash
+  if(location.hash==="#admin"){ showAdminLogin(); }
+})();
   showToast(`已加入：${p.name}`);
 }
 
@@ -503,14 +510,35 @@ function changeQty(idx, delta) {
   cart[idx].qty += delta;
   if (cart[idx].qty <= 0) { cart.splice(idx,1); }
   renderCart();
+// Robust admin toggle listener
+(function(){
+  var btn = document.querySelector(".admin-toggle");
+  if(btn) { btn.addEventListener("click", function(e){ e.preventDefault(); showAdminLogin(); }); }
+  // Also support URL hash
+  if(location.hash==="#admin"){ showAdminLogin(); }
+})();
 }
 
-function clearCart() { cart=[]; renderCart(); showToast("购物车已清空"); }
+function clearCart() { cart=[]; renderCart();
+// Robust admin toggle listener
+(function(){
+  var btn = document.querySelector(".admin-toggle");
+  if(btn) { btn.addEventListener("click", function(e){ e.preventDefault(); showAdminLogin(); }); }
+  // Also support URL hash
+  if(location.hash==="#admin"){ showAdminLogin(); }
+})(); showToast("购物车已清空"); }
 
 function toggleCart() {
   document.getElementById("cartPanel").classList.toggle("show");
   document.getElementById("overlay").classList.toggle("show");
   renderCart();
+// Robust admin toggle listener
+(function(){
+  var btn = document.querySelector(".admin-toggle");
+  if(btn) { btn.addEventListener("click", function(e){ e.preventDefault(); showAdminLogin(); }); }
+  // Also support URL hash
+  if(location.hash==="#admin"){ showAdminLogin(); }
+})();
 }
 
 function openOrderForm() {
@@ -556,6 +584,13 @@ function submitOrder() {
     : '<div style="margin-top:16px;background:#fffbe6;padding:12px;border-radius:8px;text-align:center;font-size:14px;">💰 支持<strong>货到付款</strong>，配送员会当面收款</div>';
   document.getElementById("orderNoDisplay").textContent = "订单号：" + orderNo;
   cart = []; renderCart();
+// Robust admin toggle listener
+(function(){
+  var btn = document.querySelector(".admin-toggle");
+  if(btn) { btn.addEventListener("click", function(e){ e.preventDefault(); showAdminLogin(); }); }
+  // Also support URL hash
+  if(location.hash==="#admin"){ showAdminLogin(); }
+})();
   document.getElementById("inputName").value = "";
   document.getElementById("inputPhone").value = "";
   document.getElementById("inputPlate").value = "";
@@ -897,6 +932,13 @@ function handleAdminPayQr(e) {
 }
 renderProducts();
 renderCart();
+// Robust admin toggle listener
+(function(){
+  var btn = document.querySelector(".admin-toggle");
+  if(btn) { btn.addEventListener("click", function(e){ e.preventDefault(); showAdminLogin(); }); }
+  // Also support URL hash
+  if(location.hash==="#admin"){ showAdminLogin(); }
+})();
 </script>
 <!-- Admin toggle -->
 <button class="admin-toggle" onclick="showAdminLogin()" title="管理">⚙</button>
