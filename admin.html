@@ -440,6 +440,7 @@ function renderTable() {
   }
 
   updateStats();
+}
 
 function getEmoji(cat) {
   var map = { ice:"🐟", live:"🦀", dry:"📦", gift:"🎁" };
@@ -707,6 +708,9 @@ function renderOrders() {
   document.getElementById("statDelivering").textContent = all.filter(function(o){return o.status==="配送中"}).length;
   document.getElementById("statDone").textContent = all.filter(function(o){return o.status==="已完成"}).length;
 }
+}
+
+
 function updateOrderStatus(idx,status) { var o=loadOrders(); o[idx].status=status; saveOrders(o); renderOrders(); showToast("状态已更新："+status); }
 function markPaid(idx) { var o=loadOrders(); o[idx].paid=true; saveOrders(o); renderOrders(); showToast("已标记为已付款"); }
 function deleteOrder(idx) { if(!confirm("确定删除？"))return; var o=loadOrders(); o.splice(idx,1); saveOrders(o); renderOrders(); showToast("订单已删除"); }
