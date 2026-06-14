@@ -657,13 +657,6 @@ document.querySelectorAll(".sidebar a[data-page]").forEach(function(a) {
     if (el.getAttribute("data-page") === "orders") renderOrders();
     if (el.getAttribute("data-page") === "settings") loadSettings();
   });
-    var pageId = "page-" + link.dataset.page;
-    var pageEl = document.getElementById(pageId);
-    if (pageEl) pageEl.style.display = "block";
-    if (link.dataset.page === "products") renderTable();
-    if (link.dataset.page === "orders") renderOrders();
-    if (link.dataset.page === "settings") loadSettings();
-  });
 });
 
 // ============ ORDERS ============
