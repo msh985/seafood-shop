@@ -406,6 +406,9 @@ function renderTable() {
 
   if (search) products = products.filter(function(p){ return p.name.toLowerCase().includes(search); });
   if (filter !== "all") products = products.filter(function(p){ return p.cat === filter; });
+  var statusEl = document.getElementById("filterStatus");
+  if (statusEl && statusEl.value === "published") products = products.filter(function(p){ return p.published !== false; });
+  if (statusEl && statusEl.value === "unpublished") products = products.filter(function(p){ return p.published === false; });
   var statusFilter = document.getElementById("filterStatus");
   if (statusFilter && statusFilter.value === "published") products = products.filter(function(p){ return p.published !== false; });
   if (statusFilter && statusFilter.value === "unpublished") products = products.filter(function(p){ return p.published === false; });
