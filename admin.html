@@ -126,6 +126,25 @@ tr:hover td { background:#fafcfd; }
     <p id="adminGateError" style="color:#ff4444;font-size:12px;margin-top:8px;display:none;">密码错误，请重试</p>
   </div>
 </div>
+<script>
+function getAdminPwd() { return "mashihong199856"; }
+function checkAdminGate() {
+  var pwd = document.getElementById("adminGatePwd");
+  if (!pwd) return;
+  pwd = pwd.value;
+  if (pwd === getAdminPwd()) {
+    var gate = document.getElementById("adminLoginGate");
+    if (gate) gate.style.display = "none";
+    try { localStorage.removeItem("seafood_admin_pwd"); } catch(e) {}
+  } else {
+    var err = document.getElementById("adminGateError");
+    if (err) err.style.display = "block";
+    var inp = document.getElementById("adminGatePwd");
+    if (inp) { inp.value = ""; inp.focus(); }
+  }
+}
+</script>
+
 
 
 
@@ -719,16 +738,7 @@ function showToast(msg) {
   t._timeout = setTimeout(() => t.classList.remove("show"), 2000);
 }
 
-// ============ LOGIN CHECK ============
-function getAdminPwd() { return "mashihong199856"; }
-function checkAdminGate() {
-  var pwd = document.getElementById("adminGatePwd");
-  if (!pwd) return;
-  pwd = pwd.value;
-  if (pwd === getAdminPwd()) {
-    var gate = document.getElementById("adminLoginGate");
-    if (gate) gate.style.display = "none";
-  } else {
+// ============ LOGIN CHECK (moved to top) ============ else {
     var err = document.getElementById("adminGateError");
     if (err) err.style.display = "block";
     var inp = document.getElementById("adminGatePwd");
