@@ -637,9 +637,10 @@ function saveSettings() {
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
 }
 
-// ============ SIDEBAR NAV ============
-document.querySelectorAll(".sidebar a[data-page]").forEach(function(a) {
-  a.addEventListener("click", function(e) {
+// ============ // ============ SIDEBAR NAV ============
+var sidebarLinks = document.querySelectorAll(".sidebar a[data-page]");
+for (var si = 0; si < sidebarLinks.length; si++) {
+  sidebarLinks[si].addEventListener("click", function(e) {
     e.preventDefault();
     var el = e.target;
     while (el && el !== this) {
@@ -647,9 +648,11 @@ document.querySelectorAll(".sidebar a[data-page]").forEach(function(a) {
       el = el.parentNode;
     }
     if (!el || !el.hasAttribute("data-page")) return;
-    document.querySelectorAll(".sidebar a[data-page]").forEach(function(x){ x.classList.remove("active"); });
+    var allLinks = document.querySelectorAll(".sidebar a[data-page]");
+    for (var ai = 0; ai < allLinks.length; ai++) { allLinks[ai].classList.remove("active"); }
     el.classList.add("active");
-    document.querySelectorAll("#mainContent > div").forEach(function(d){ d.style.display = "none"; });
+    var allPages = document.querySelectorAll("#mainContent > div");
+    for (var pi = 0; pi < allPages.length; pi++) { allPages[pi].style.display = "none"; }
     var pageId = "page-" + el.getAttribute("data-page");
     var pageEl = document.getElementById(pageId);
     if (pageEl) pageEl.style.display = "block";
@@ -657,8 +660,7 @@ document.querySelectorAll(".sidebar a[data-page]").forEach(function(a) {
     if (el.getAttribute("data-page") === "orders") renderOrders();
     if (el.getAttribute("data-page") === "settings") loadSettings();
   });
-});
-
+}
 // ============ ORDERS ============
 const ORDERS_KEY_ADMIN = "seafood_shop_orders";
 function loadOrders() { try { var r = null; try { r = localStorage.getItem("seafood_shop_orders"); } catch(e) {} return r ? JSON.parse(r) : []; } catch(e) { return []; } }
