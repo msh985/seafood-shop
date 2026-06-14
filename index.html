@@ -435,9 +435,9 @@ function submitOrder() {
   const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
   const order = { orderNo, name, phone, plate: plate || "未提供", location, note, total, items: cart.map(i => ({ name:i.name, qty:i.qty, price:i.price })), time: new Date().toLocaleString() };
     // Save to localStorage for admin panel
-  const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || "[]");
-  orders.unshift({...order, status:"待确认", paid:false});
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+  const orders = JSON.parse((function(){try{return localStorage.getItem(ORDERS_KEY)}catch(e){return null}})() || "[]");
+  orders.unshift(Object.assign({}, order, {status:"待确认", paid:false}));
+  try { localStorage.setItem(ORDERS_KEY, JSON.stringify(orders)); } catch(e) {}
   console.log("新订单:", JSON.stringify(order, null, 2));
   document.getElementById("orderFormEl").style.display = "none";
     document.getElementById("successPage").style.display = "block";
@@ -520,7 +520,7 @@ function showToast(msg) {
   const t = document.getElementById("toast");
   t.textContent = msg; t.classList.add("show");
   clearTimeout(t._timeout);
-  t._timeout = setTimeout(() => t.classList.remove("show"), 1500);
+  t._timeout = setTimeout(function() { t.classList.remove("show"); }, 1500);
 }
 
 

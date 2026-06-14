@@ -381,7 +381,7 @@ function saveProducts(data) {
 
 function getNextId() {
   const products = loadProducts();
-  return products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+  return products.length > 0 ? Math.max.apply(null, products.map(function(p){ return p.id; })) + 1 : 1;
 }
 
 // ============ RENDER TABLE ============
@@ -393,13 +393,13 @@ function renderTable() {
   const search = (document.getElementById("searchInput").value || "").toLowerCase();
   const filter = document.getElementById("filterCat").value;
 
-  if (search) products = products.filter(p => p.name.toLowerCase().includes(search));
-  if (filter !== "all") products = products.filter(p => p.cat === filter);
+  if (search) products = products.filter(function(p){ return p.name.toLowerCase().includes(search); });
+  if (filter !== "all") products = products.filter(function(p){ return p.cat === filter; });
   var statusFilter = document.getElementById("filterStatus");
   if (statusFilter && statusFilter.value === "published") products = products.filter(function(p){ return p.published !== false; });
   if (statusFilter && statusFilter.value === "unpublished") products = products.filter(function(p){ return p.published === false; });
 
-  products.sort((a,b) => (a.sort||0) - (b.sort||0));
+  products.sort(function(a,b){ return (a.sort||0) - (b.sort||0); });
 
   const tbody = document.getElementById("productTableBody");
   const empty = document.getElementById("emptyState");
@@ -409,7 +409,7 @@ function renderTable() {
     empty.style.display = "block";
   } else {
     empty.style.display = "none";
-    tbody.innerHTML = products.map(p => `
+    tbody.innerHTML = products.map(function(p){ return `
       <tr>
         <td>
           <div class="product-thumb">
@@ -425,8 +425,7 @@ function renderTable() {
           <button class="btn btn-outline btn-sm" onclick="togglePublish(${p.id})" style="font-size:14px;" title="上架/下架">${p.published!==false ? "🔴" : "🟢"}</button>\r\n          <button class="btn btn-outline btn-sm" onclick="openEditModal(${p.id})">✏️</button>
           <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">🗑</button>
         </td>
-      </tr>
-    `).join("");
+      </tr>\n  `; }).join("");
   }
 
   updateStats();
@@ -440,9 +439,9 @@ function getEmoji(cat) {
 function updateStats() {
   const products = loadProducts();
   document.getElementById("statTotal").textContent = products.length;
-  document.getElementById("statIce").textContent = products.filter(p => p.cat==="ice").length;
-  document.getElementById("statLive").textContent = products.filter(p => p.cat==="live").length;
-  document.getElementById("statDry").textContent = products.filter(p => p.cat==="dry"||p.cat==="gift").length;
+  document.getElementById("statIce").textContent = products.filter(function(p){ return p.cat==="ice"; }).length;
+  document.getElementById("statLive").textContent = products.filter(function(p){ return p.cat==="live"; }).length;
+  document.getElementById("statDry").textContent = products.filter(function(p){ return p.cat==="dry"||p.cat==="gift"; }).length;
 }
 
 // ============ MODAL ============
@@ -469,7 +468,7 @@ function openAddModal() {
 
 function openEditModal(id) {
   const products = loadProducts();
-  const p = products.find(x => x.id === id);
+  const p = products.find(function(x){ return x.id === id; });
   if (!p) return;
   editingId = id;
   tempImageData = p.img || "";
@@ -540,7 +539,7 @@ function saveProduct() {
   const products = loadProducts();
 
   if (editingId) {
-    const idx = products.findIndex(p => p.id === editingId);
+    const idx = products.findIndex(function(p){ return p.id === editingId; });
     if (idx >= 0) {
       products[idx].name = name;
       products[idx].cat = cat;
@@ -567,7 +566,7 @@ function saveProduct() {
 
 function deleteProduct(id) {
   if (!confirm("确定删除这个商品吗？")) return;
-  const products = loadProducts().filter(p => p.id !== id);
+  const products = loadProducts().filter(function(p){ return p.id !== id; });
   saveProducts(products);
   setTimeout(function(){ try { renderTable(); } catch(e){} }, 100);
   showToast("商品已删除");
@@ -639,7 +638,7 @@ function saveSettings() {
 }
 
 // ============ SIDEBAR NAV ============
-document.querySelectorAll(".sidebar a[data-page]").forEach(a => {
+document.querySelectorAll(".sidebar a[data-page]").forEach(function(a) {
   a.addEventListener("click", function(e) {
     e.preventDefault();
     var el = e.target;
@@ -658,8 +657,6 @@ document.querySelectorAll(".sidebar a[data-page]").forEach(a => {
     if (el.getAttribute("data-page") === "orders") renderOrders();
     if (el.getAttribute("data-page") === "settings") loadSettings();
   });
-    link.classList.add("active");
-    document.querySelectorAll("#mainContent > div").forEach(function(d){ d.style.display = "none"; });
     var pageId = "page-" + link.dataset.page;
     var pageEl = document.getElementById(pageId);
     if (pageEl) pageEl.style.display = "block";
@@ -670,26 +667,26 @@ document.querySelectorAll(".sidebar a[data-page]").forEach(a => {
 });
 
 // ============ ORDERS ============
-const "seafood_shop_orders" = "seafood_shop_orders";
+const ORDERS_KEY_ADMIN = "seafood_shop_orders";
 function loadOrders() { try { var r = null; try { r = localStorage.getItem("seafood_shop_orders"); } catch(e) {} return r ? JSON.parse(r) : []; } catch(e) { return []; } }
-function saveOrders(o) { try { try { localStorage.setItem("seafood_shop_orders", JSON.stringify(o)); } catch(e) {} }
+function saveOrders(o) { try { localStorage.setItem("seafood_shop_orders", JSON.stringify(o)); } catch(e) {} }
 function renderOrders() {
   let orders = loadOrders();
   const sf = document.getElementById("orderStatusFilter").value;
   const pf = document.getElementById("orderPaidFilter").value;
-  if (sf !== "all") orders = orders.filter(o => o.status === sf);
-  if (pf === "paid") orders = orders.filter(o => o.paid);
-  if (pf === "unpaid") orders = orders.filter(o => !o.paid);
+  if (sf !== "all") orders = orders.filter(function(o){ return o.status === sf; });
+  if (pf === "paid") orders = orders.filter(function(o){ return o.paid; });
+  if (pf === "unpaid") orders = orders.filter(function(o){ return !o.paid; });
   const tbody = document.getElementById("orderTableBody");
   const empty = document.getElementById("orderEmpty");
   if (orders.length === 0) { if(tbody) tbody.innerHTML = ""; if(empty) empty.style.display = "block"; document.getElementById("statPending").textContent = "0"; document.getElementById("statPreparing").textContent = "0"; document.getElementById("statDelivering").textContent = "0"; document.getElementById("statDone").textContent = "0"; return; }
   empty.style.display = "none";
-  tbody.innerHTML = orders.map((o,i) => {
-    const statusOpts = ["待确认","备货中","配送中","已完成","已取消"].map(s => "<option value='"+s+"'"+(o.status===s?" selected":"")+">"+s+"</option>").join("");
+  tbody.innerHTML = orders.map(function(o,i){
+    const statusOpts = ["待确认","备货中","配送中","已完成","已取消"].map(function(s){ return "<option value='"+s+"'"+(o.status===s?" selected":"")+">"+s+"</option>").join("");
     return "<tr>" +
       "<td style='font-size:12px;font-family:monospace;'>"+o.orderNo+"</td>" +
       "<td><div style='font-weight:500;'>"+o.name+"</div><div style='font-size:12px;color:#888;'>"+o.phone+"</div>"+(o.plate && o.plate!=="未提供"?"<div style='font-size:12px;color:#0a7cbf;'>🚗 "+o.plate+"</div>":"")+"</td>" +
-      "<td style='font-size:12px;'>"+o.items.map(x=>x.name+"×"+x.qty).join("<br>")+"</td>" +
+      "<td style='font-size:12px;'>"+o.items.map(function(x){ return x.name+"×"+x.qty; }).join("<br>")+"</td>" +
       "<td style='color:#ff4444;font-weight:600;'>¥"+o.total+"</td>" +
       "<td>"+(o.paid?"<span style='color:#28a745;font-weight:600;'>✓ 已付</span>":"<span style='color:#ff6b35;'>待付款</span>")+"</td>" +
       "<td><select style='padding:4px 8px;border-radius:6px;border:1px solid #ddd;font-size:12px;' onchange='updateOrderStatus("+i+",this.value)'>"+statusOpts+"</select></td>" +
@@ -699,10 +696,10 @@ function renderOrders() {
       "</tr>";
   }).join("");
   const all = loadOrders();
-  document.getElementById("statPending").textContent = all.filter(o=>o.status==="待确认").length;
-  document.getElementById("statPreparing").textContent = all.filter(o=>o.status==="备货中").length;
-  document.getElementById("statDelivering").textContent = all.filter(o=>o.status==="配送中").length;
-  document.getElementById("statDone").textContent = all.filter(o=>o.status==="已完成").length;
+  document.getElementById("statPending").textContent = all.filter(function(o){return o.status==="待确认"}).length;
+  document.getElementById("statPreparing").textContent = all.filter(function(o){return o.status==="备货中"}).length;
+  document.getElementById("statDelivering").textContent = all.filter(function(o){return o.status==="配送中"}).length;
+  document.getElementById("statDone").textContent = all.filter(function(o){return o.status==="已完成"}).length;
 }
 function updateOrderStatus(idx,status) { const o=loadOrders(); o[idx].status=status; saveOrders(o); renderOrders(); showToast("状态已更新："+status); }
 function markPaid(idx) { const o=loadOrders(); o[idx].paid=true; saveOrders(o); renderOrders(); showToast("已标记为已付款"); }
@@ -746,7 +743,7 @@ function showToast(msg) {
   const t = document.getElementById("toast");
   t.textContent = msg; t.classList.add("show");
   clearTimeout(t._timeout);
-  t._timeout = setTimeout(() => t.classList.remove("show"), 2000);
+  t._timeout = setTimeout(function() { t.classList.remove("show"); }, 2000);
 }
 
 // ============ LOGIN CHECK (moved to top) ============ else {
