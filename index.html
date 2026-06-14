@@ -282,22 +282,22 @@ function loadShopProducts() {
   return defaultProducts;
 }
 const defaultProducts = [
-  { id:1, name:"舟山带鱼（中段）", cat:"ice", imgKey:"带鱼", desc:"本地雷达网带鱼，肉嫩鲜美", price:68, unit:"斤", tag:"爆款" },
-  { id:2, name:"东海大黄鱼", cat:"ice", imgKey:"大黄鱼", desc:"舟山野生大黄鱼，蒜瓣肉", price:158, unit:"条(500g)", tag:"" },
-  { id:3, name:"舟山鲳鱼", cat:"ice", imgKey:"鲳鱼", desc:"平川鲳鱼，刺少肉多", price:88, unit:"斤", tag:"" },
-  { id:4, name:"墨鱼/目鱼", cat:"ice", imgKey:"墨鱼", desc:"新鲜墨鱼，白灼红烧皆可", price:45, unit:"斤", tag:"" },
-  { id:5, name:"红膏呛蟹", cat:"ice", imgKey:"呛蟹", desc:"舟山招牌，咸鲜入味", price:98, unit:"只", tag:"招牌" },
-  { id:6, name:"舟山梭子蟹", cat:"live", imgKey:"梭子蟹", desc:"鲜活梭子蟹，膏肥肉满", price:128, unit:"斤", tag:"时令" },
-  { id:7, name:"皮皮虾/虾蛄", cat:"live", imgKey:"皮皮虾", desc:"鲜活虾蛄，椒盐一绝", price:78, unit:"斤", tag:"" },
-  { id:8, name:"基围虾", cat:"live", imgKey:"基围虾", desc:"活蹦乱跳，白灼最佳", price:68, unit:"斤", tag:"" },
-  { id:9, name:"花蛤/文蛤", cat:"live", imgKey:"花蛤", desc:"吐好沙的，辣炒鲜美", price:18, unit:"斤", tag:"实惠" },
-  { id:10, name:"舟山虾皮", cat:"dry", imgKey:"虾皮", desc:"淡干虾皮，补钙首选", price:35, unit:"袋(250g)", tag:"必买" },
-  { id:11, name:"鱿鱼丝/墨鱼丝", cat:"dry", imgKey:"鱿鱼丝", desc:"即食海鲜零食，追剧必备", price:28, unit:"袋(200g)", tag:"" },
-  { id:12, name:"紫菜（头水）", cat:"dry", imgKey:"紫菜", desc:"头水紫菜，煮汤鲜掉眉毛", price:32, unit:"包(100g)", tag:"" },
-  { id:13, name:"舟山鱼片干", cat:"dry", imgKey:"鱼片干", desc:"马鲛鱼片干，嚼劲十足", price:25, unit:"袋(200g)", tag:"" },
-  { id:14, name:"海鲜零食礼包", cat:"gift", imgKey:"礼盒", desc:"虾皮+鱿鱼丝+鱼片+紫菜组合", price:108, unit:"套", tag:"送礼" },
-  { id:15, name:"冰鲜三件套", cat:"gift", imgKey:"礼盒", desc:"带鱼+鲳鱼+墨鱼，泡沫箱打包", price:188, unit:"套", tag:"划算" },
-  { id:16, name:"豪华海鲜礼盒", cat:"gift", imgKey:"礼盒", desc:"黄鱼+梭子蟹+带鱼+鲳鱼+虾皮", price:388, unit:"套", tag:"高端" }
+  { id:1, name:"舟山带鱼（中段）", cat:"ice", img:"", desc:"本地雷达网带鱼，肉嫩鲜美", price:68, unit:"斤", tag:"爆款", published:true },
+  { id:2, name:"东海大黄鱼", cat:"ice", img:"", desc:"舟山野生大黄鱼，蒜瓣肉", price:158, unit:"条(500g)", tag:"", published:true },
+  { id:3, name:"舟山鲳鱼", cat:"ice", img:"", desc:"平川鲳鱼，刺少肉多", price:88, unit:"斤", tag:"", published:true },
+  { id:4, name:"墨鱼/目鱼", cat:"ice", img:"", desc:"新鲜墨鱼，白灼红烧皆可", price:45, unit:"斤", tag:"", published:true },
+  { id:5, name:"红膏呛蟹", cat:"ice", img:"", desc:"舟山招牌，咸鲜入味", price:98, unit:"只", tag:"招牌", published:true },
+  { id:6, name:"舟山梭子蟹", cat:"live", img:"", desc:"鲜活梭子蟹，膏肥肉满", price:128, unit:"斤", tag:"时令", published:true },
+  { id:7, name:"皮皮虾/虾蛄", cat:"live", img:"", desc:"鲜活虾蛄，椒盐一绝", price:78, unit:"斤", tag:"", published:true },
+  { id:8, name:"基围虾", cat:"live", img:"", desc:"活蹦乱跳，白灼最佳", price:68, unit:"斤", tag:"", published:true },
+  { id:9, name:"花蛤/文蛤", cat:"live", img:"", desc:"吐好沙的，辣炒鲜美", price:18, unit:"斤", tag:"实惠", published:true },
+  { id:10, name:"舟山虾皮", cat:"dry", img:"", desc:"淡干虾皮，补钙首选", price:35, unit:"袋(250g)", tag:"必买", published:true },
+  { id:11, name:"鱿鱼丝/墨鱼丝", cat:"dry", img:"", desc:"即食海鲜零食，追剧必备", price:28, unit:"袋(200g)", tag:"", published:true },
+  { id:12, name:"紫菜（头水）", cat:"dry", img:"", desc:"头水紫菜，煮汤鲜掉眉毛", price:32, unit:"包(100g)", tag:"", published:true },
+  { id:13, name:"舟山鱼片干", cat:"dry", img:"", desc:"马鲛鱼片干，嚼劲十足", price:25, unit:"袋(200g)", tag:"", published:true },
+  { id:14, name:"海鲜零食礼包", cat:"gift", img:"", desc:"虾皮+鱿鱼丝+鱼片+紫菜组合", price:108, unit:"套", tag:"送礼", published:true },
+  { id:15, name:"冰鲜三件套", cat:"gift", img:"", desc:"带鱼+鲳鱼+墨鱼，泡沫箱打包", price:188, unit:"套", tag:"划算", published:true },
+  { id:16, name:"豪华海鲜礼盒", cat:"gift", img:"", desc:"黄鱼+梭子蟹+带鱼+鲳鱼+虾皮", price:388, unit:"套", tag:"高端", published:true }
 ];
 
 ];
@@ -312,11 +312,11 @@ try { window.addEventListener('storage', function(e) { if (e.key === STORAGE_KEY
 
 function renderProducts() {
   const list = document.getElementById("productList");
-  const filtered = currentCat === "all" ? products : products.filter(p => p.cat === currentCat);
+  const filtered = (currentCat === "all" ? products : products.filter(p => p.cat === currentCat)).filter(p => p.published !== false);
   list.innerHTML = filtered.map(p => `
     <div class="product-card">
       <div class="product-img" onclick="addToCart(${p.id})">
-        ${p.img ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;" alt="${p.name}">` : (productImages[p.imgKey] || "🐟")}
+        ${p.img ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;" alt="${p.name}">` : "🐟"}
         ${p.tag ? `<span class="product-tag">${p.tag}</span>` : ""}
       </div>
       <div class="product-info">
@@ -341,7 +341,7 @@ function renderCart() {
   } else {
     container.innerHTML = cart.map((item,idx) => `
       <div class="cart-item">
-        <div class="cart-item-img">${item.img ? `<img src="${item.img}" style="width:100%;height:100%;object-fit:cover;" alt="${item.name}">` : (productImages[item.imgKey] || "🐟")}</div>
+        <div class="cart-item-img">${item.img ? `<img src="${item.img}" style="width:100%;height:100%;object-fit:cover;" alt="${item.name}">` : "🐟"}</div>
         <div class="cart-item-info">
           <div class="cart-item-name">${item.name}</div>
           <div class="cart-item-price">¥${item.price}/${item.unit}</div>
@@ -370,7 +370,7 @@ function updateTotals() {
 }
 
 function addToCart(id) {
-  const p = products.find(x => x.id === id);
+  const p = products.find(x => x.id === id); if (!p || p.published === false) return;
   const existing = cart.find(x => x.id === id);
   if (existing) { existing.qty++; }
   else { cart.push({ id:p.id, name:p.name, imgKey:p.imgKey, img:p.img, price:p.price, unit:p.unit, qty:1 }); }
