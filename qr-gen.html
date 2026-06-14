@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>QR Code Generator</title>
+<style>
+body{display:flex;justify-content:center;align-items:center;min-height:100vh;background:#f0f2f5;flex-direction:column;gap:20px;font-family:sans-serif}
+.qr-wrap{background:white;padding:20px;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+canvas{border-radius:8px}
+.info{color:#666;font-size:14px}
+</style>
+</head>
+<body>
+<div class="info">海味鲜 · 扫码下单</div>
+<div class="qr-wrap"><canvas id="qr"></canvas></div>
+<div class="info" style="font-weight:700;color:#0a7cbf">https://haiweixian.com</div>
+
+<script>
+// Pure JS QR Code Generator (Byte mode, Version 3, EC M)
+(function(){
+  const EXP_TABLE = new Uint8Array(512);
+  const LOG_TABLE = new Uint8Array(256);
+  
+  // Init GF(256)
+  let x = 1;
+  for(let i = 0; i < 255; i++) {
+    EXP_TABLE[i] = x;
+    LOG_TABLE[x] = i;
+    x <<= 1;
+    if(x & 0x100) x ^= 0x11D;
+  }
+  for(let i = 255; i < 512; i++) EXP_TABLE[i] = EXP_TABLE[i-255];
+
+  function gfMul(a,b) {
+    if(!a||!b) return 0;
+    return EXP_TABLE[LOG_TABLE[a]+LOG_TABLE[b]];
+  }
+
+  function polyMul(p,q) {
+    const r = new Uint8Array(p.length+q.length-1);
+    for(let i=0;i<p.length;i++)
+      for(let j=0;j<q.length;j++)
+        r[i+j] ^= gfMul(p[i],q[j]);
+    return r;
+  }
+
+  function genPoly(nsym) {
+    let g = new Uint8Array([1]);
+    for(let i=0;i<nsym;i++) g = polyMul(g,new Uint8Array([1,EXP_TABLE[i]]));
+    return g;
+  }
+
+  function rsEncode(msg, nsym) {
+    const gen = genPoly(nsym);
+    const padded = new Uint8Array(msg.length+nsym);
+    padded.set(msg);
+    for(let i=0;i<msg.length;i++) {
+      const coef = padded[i];
+      if(coef) {
+        const lc = LOG_TABLE[coef];
+        for(let j=0;j<gen.length;j++)
+          padded[i+j] ^= EXP_TABLE[lc+LOG_TABLE[gen[j]]];
+      }
+    }
+    const out = new Uint8Array(msg.length+nsym);
+    out.set(msg);
+    for(let i=0;i<nsym;i++) out[msg.length+i] = padded[msg.length+i];
+    return out;
+  }
+
+  const N = 29; // Version 3
+  const DATA_CW = 44;
+  const EC_CW = 26;
+
+  function encodeData(text) {
+    let bits = '';
+    bits += '0100'; // Byte mode
+    bits += text.length.toString(2).padStart(8,'0');
+    for(let i=0;i<text.length;i++) bits += text.charCodeAt(i).toString(2).padStart(8,'0');
+    bits += '0000'; // terminator
+    while(bits.length%8) bits += '0';
+    const cw = [];
+    for(let i=0;i<bits.length;i+=8) cw.push(parseInt(bits.substr(i,8),2));
+    const pad = [0xEC,0x11];
+    let pi = 0;
+    while(cw.length < DATA_CW) { cw.push(pad[pi%2]); pi++; }
+    return cw;
+  }
+
+  function buildMatrix(allCW) {
+    const mat = Array.from({length:N},()=>new Int8Array(N).fill(-1));
+    
+    function finder(r,c) {
+      for(let i=0;i<7;i++)
+        for(let j=0;j<7;j++)
+          mat[r+i][c+j] = (i===0||i===6||j===0||j===6||(i>1&&i<5&&j>1&&j<5)) ? 1 : 0;
+    }
+    finder(0,0); finder(0,N-7); finder(N-7,0);
+    
+    // Separators
+    for(let i=0;i<8;i++) {
+      if(i<7) { mat[i][7]=0; mat[i][N-8]=0; }
+      mat[7][i]=0; mat[7][N-1-i]=0; mat[N-8][i]=0;
+    }
+    // Timing
+    for(let i=8;i<N-8;i++) { mat[6][i]=i%2?0:1; mat[i][6]=i%2?0:1; }
+    // Dark module
+    mat[N-8][8]=1;
+    
+    // Reserve format areas
+    for(let i=0;i<9;i++){ if(mat[i][8]===-1)mat[i][8]=0; if(mat[8][i]===-1)mat[8][i]=0; }
+    for(let i=0;i<8;i++){ if(mat[8][N-1-i]===-1)mat[8][N-1-i]=0; if(mat[N-1-i][8]===-1)mat[N-1-i][8]=0; }
+    
+    // Data bits
+    let bitStr = '';
+    for(let i=0;i<allCW.length;i++) bitStr += allCW[i].toString(2).padStart(8,'0');
+    
+    let col=N-1, up=true, bi=0;
+    while(col>0) {
+      if(col===6) col--;
+      const rows = up ? [...Array(N)].map((_,i)=>N-1-i) : [...Array(N)].map((_,i)=>i);
+      for(const r of rows) {
+        for(const c of [col,col-1]) {
+          if(mat[r][c]===-1 && bi<bitStr.length) {
+            mat[r][c]=parseInt(bitStr[bi]); bi++;
+          }
+        }
+      }
+      col-=2; up=!up;
+    }
+    
+    for(let r=0;r<N;r++) for(let c=0;c<N;c++) if(mat[r][c]===-1) mat[r][c]=0;
+    return mat;
+  }
+
+  const FORMAT_BITS = [1,0,1,0,1,1,1,0,1,1,1,1,1,0,0];
+
+  function applyFormat(mat) {
+    for(let i=0;i<6;i++) mat[i][8]=FORMAT_BITS[i];
+    mat[7][8]=FORMAT_BITS[6]; mat[8][8]=FORMAT_BITS[7]; mat[8][7]=FORMAT_BITS[8];
+    for(let i=0;i<6;i++) mat[8][5-i]=FORMAT_BITS[9+i];
+    for(let i=0;i<8;i++) mat[8][N-1-i]=FORMAT_BITS[i];
+    for(let i=0;i<7;i++) mat[N-6+i][8]=FORMAT_BITS[8+i];
+  }
+
+  function applyMask(mat) {
+    const func=new Set();
+    for(const [fr,fc] of [[0,0],[0,N-7],[N-7,0]]) {
+      for(let i=0;i<9;i++)for(let j=0;j<9;j++)if(fr+i<N&&fc+j<N)func.add((fr+i)*100+(fc+j));
+    }
+    for(let i=0;i<N;i++){func.add(6*100+i);func.add(i*100+6);}
+    for(let i=0;i<9;i++){func.add(i*100+8);func.add(8*100+i);}
+    for(let i=0;i<8;i++){func.add(8*100+N-1-i);func.add((N-1-i)*100+8);}
+    
+    // Mask 0: (row+col)%2==0
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++)
+      if(!func.has(r*100+c)&&mat[r][c]>=0&&(r+c)%2===0) mat[r][c]^=1;
+  }
+
+  // Generate
+  const text = 'https://haiweixian.com';
+  const dataCW = encodeData(text);
+  const fullCW = rsEncode(dataCW, EC_CW);
+  const mat = buildMatrix(fullCW);
+  applyMask(mat);
+  applyFormat(mat);
+
+  // Draw canvas
+  const SIZE = 500;
+  const BORDER = 40;
+  const s = (SIZE-BORDER*2)/N;
+  const canvas = document.getElementById('qr');
+  canvas.width = SIZE;
+  canvas.height = SIZE;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0,0,SIZE,SIZE);
+  ctx.fillStyle = '#0a2e3f';
+  for(let r=0;r<N;r++)
+    for(let c=0;c<N;c++)
+      if(mat[r][c])
+        ctx.fillRect(BORDER+c*s,BORDER+r*s,s,s);
+})();
+</script>
+</body>
+</html>
