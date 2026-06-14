@@ -251,12 +251,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 <body>
 
 <div class="header">
-  <div class="header-top"><a href="admin.html" style="float:right;color:#fff;background:rgba(255,255,255,.2);padding:4px 12px;border-radius:14px;font-size:12px;text-decoration:none;margin-top:4px;">⚙ 管理</a>
-    <div>
-      <h1 style="text-align:center;width:100%;">🦐 朱家尖海鲜配送</h1>
-      <div class="header-sub">扫码下单 · 配送到车 · 新鲜保证</div>
-    </div>
-  </div>
+  <div class="header-top"><div style="flex:1;text-align:center;"><h1>🦐 朱家尖海鲜配送</h1><div class="header-sub">扫码下单 · 配送到车 · 新鲜保证</div></div><a href="admin.html" style="color:#fff;background:rgba(255,255,255,.2);padding:4px 12px;border-radius:14px;font-size:12px;text-decoration:none;flex-shrink:0;">⚙ 管理</a></div>
 </div>
 
 <div class="banner">
@@ -903,87 +898,5 @@ function handleAdminPayQr(e) {
 try { renderProducts(); } catch(e) { console.warn(e); } try { renderCart(); } catch(e) { console.warn(e); }
 
 </script>
-<!-- Admin toggle -->
-<!-- Admin Panel -->
-<div class="admin-overlay" id="adminOverlay">
-  <div id="adminLogin" class="admin-pwd-box">
-    <h3 style="margin-bottom:16px;">🔐 后台管理</h3>
-    <input type="password" id="adminPwd" placeholder="输入管理密码" onkeydown="if(event.key==='Enter')checkAdminPwd()">
-    <br><button class="checkout-btn" style="width:200px;" onclick="checkAdminPwd()">进入管理</button>
-  </div>
-  <div id="adminContent" style="display:none;">
-    <div class="admin-header">
-      <h2>🦐 后台管理</h2>
-      <div>
-        <button onclick="switchAdminTab('products')" style="margin-right:6px;">📦</button>
-        <button onclick="switchAdminTab('orders')" style="margin-right:6px;">📋</button>
-        <button onclick="switchAdminTab('settings')" style="margin-right:6px;">⚙</button>
-        <button onclick="closeAdmin()">✕ 退出</button>
-      </div>
-    </div>
-    <div class="admin-body">
-      <!-- Products Tab -->
-      <div id="adminProducts">
-        <div class="admin-stats" id="adminStats"></div>
-        <div class="admin-toolbar">
-          <select id="adminCatFilter" onchange="renderAdminProducts()"><option value="all">全部分类</option><option value="ice">冰鲜</option><option value="live">活鲜</option><option value="dry">干货</option><option value="gift">礼盒</option></select>
-          <button class="abtn abtn-blue" onclick="openAdminProductForm()">+ 添加</button>
-          <button class="abtn abtn-outline" onclick="exportAdminData()">导出</button>
-          <button class="abtn abtn-outline" onclick="document.getElementById('adminImportFile').click()">导入</button>
-          <input type="file" id="adminImportFile" accept=".json" style="display:none" onchange="importAdminData(event)">
-          <button class="abtn abtn-outline" onclick="resetAdminData()">恢复默认</button>
-        </div>
-        <div class="admin-list" id="adminProductList"></div>
-      </div>
-      <!-- Orders Tab -->
-      <div id="adminOrders" style="display:none;">
-        <div class="admin-stats" id="adminOrderStats"></div>
-        <div class="admin-toolbar">
-          <select id="adminOrderStatusFilter" onchange="renderAdminOrders()"><option value="all">全部状态</option><option value="待确认">待确认</option><option value="备货中">备货中</option><option value="配送中">配送中</option><option value="已完成">已完成</option></select>
-          <button class="abtn abtn-outline" onclick="exportAdminOrders()">导出订单</button>
-        </div>
-        <div id="adminOrderList"></div>
-      </div>
-      <!-- Settings Tab -->
-      <div id="adminSettings" style="display:none;">
-        <div class="admin-list" style="padding:16px;">
-          <div class="admin-field"><label>管理密码</label><input type="text" id="adminSetPwd" placeholder="默认: admin123" onchange="saveAdminSettings()"></div>
-          <div class="admin-field"><label>店铺名称</label><input type="text" id="adminSetName" onchange="saveAdminSettings()"></div>
-          <div class="admin-field"><label>联系电话</label><input type="tel" id="adminSetPhone" onchange="saveAdminSettings()"></div>
-          <div class="admin-field"><label>收款二维码</label>
-            <div class="admin-img-box" onclick="document.getElementById('adminPayQrInput').click()">📷 点击上传收款码<div class="admin-img-preview" id="adminPayQrPreview"></div></div>
-            <input type="file" id="adminPayQrInput" accept="image/*" style="display:none" onchange="handleAdminPayQr(event)">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Admin Product Modal -->
-<div class="admin-modal" id="adminProductModal">
-  <div class="admin-modal-card">
-    <h4 id="adminModalTitle">添加商品</h4>
-    <div class="admin-field"><label>名称</label><input type="text" id="afName"></div>
-    <div class="admin-field-row">
-      <div class="admin-field"><label>分类</label><select id="afCat"><option value="ice">冰鲜</option><option value="live">活鲜</option><option value="dry">干货</option><option value="gift">礼盒</option></select></div>
-      <div class="admin-field"><label>价格</label><input type="number" id="afPrice" step="0.01"></div>
-    </div>
-    <div class="admin-field-row">
-      <div class="admin-field"><label>单位</label><input type="text" id="afUnit"></div>
-      <div class="admin-field"><label>标签</label><input type="text" id="afTag"></div>
-    </div>
-    <div class="admin-field"><label>描述</label><input type="text" id="afDesc"></div>
-    <div class="admin-field"><label>图片</label>
-      <div class="admin-img-box" onclick="document.getElementById('afImgInput').click()">📷 上传图片<div class="admin-img-preview" id="afImgPreview"></div></div>
-      <input type="file" id="afImgInput" accept="image/*" style="display:none" onchange="handleAfImg(event)">
-      <input type="text" id="afImgUrl" placeholder="或粘贴图片URL" style="margin-top:6px;font-size:12px;">
-    </div>
-    <div class="admin-modal-actions">
-      <button style="background:#f0f0f0;color:#666;" onclick="closeAdminProductForm()">取消</button>
-      <button style="background:#0a7cbf;color:#fff;" id="afSaveBtn" onclick="saveAdminProduct()">保存</button>
-    </div>
-  </div>
-</div>
 </body>
 </html>
