@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>朱家尖海鲜配送 - 扫码下单 送到车上</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background:#f5f5f5; color:#333; max-width:480px; margin:0 auto; min-height:100vh; }
+
+.header { background: linear-gradient(135deg,#0a7cbf,#0665a0); color:#fff; padding:12px 16px; position:sticky; top:0; z-index:100; box-shadow:0 2px 8px rgba(0,0,0,.15); }
+.header-top { display:flex; justify-content:space-between; align-items:center; }
+.header h1 { font-size:18px; font-weight:700; }
+.header-sub { font-size:12px; opacity:.85; margin-top:2px; }
+
+.banner { background: #fff; margin:10px 12px; border-radius:12px; padding:16px; display:flex; align-items:center; gap:12px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+.banner-icon { font-size:40px; }
+.banner-text h3 { font-size:15px; color:#0a7cbf; margin-bottom:4px; }
+.banner-text p { font-size:12px; color:#888; }
+
+.cats { display:flex; gap:8px; padding:0 12px; margin-bottom:12px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.cats::-webkit-scrollbar { display:none; }
+.cat-tab { flex-shrink:0; padding:8px 16px; border-radius:20px; font-size:13px; background:#fff; border:1px solid #e0e0e0; cursor:pointer; white-space:nowrap; transition:all .2s; }
+.cat-tab.active { background:#0a7cbf; color:#fff; border-color:#0a7cbf; }
+
+.products { padding:0 12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; padding-bottom:80px; }
+.product-card { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.08); cursor:pointer; transition:transform .15s; }
+.product-card:active { transform:scale(.97); }
+.product-img { width:100%; height:140px; position:relative; overflow:hidden; }
+.product-img img, .product-img svg { width:100%; height:100%; object-fit:cover; }
+.product-tag { position:absolute; top:8px; left:8px; background:#ff6b35; color:#fff; font-size:10px; padding:2px 8px; border-radius:10px; z-index:1; }
+.product-info { padding:10px 12px 12px; }
+.product-name { font-size:14px; font-weight:600; margin-bottom:4px; }
+.product-desc { font-size:11px; color:#999; margin-bottom:8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.product-bottom { display:flex; justify-content:space-between; align-items:center; }
+.product-price { color:#ff4444; font-size:16px; font-weight:700; }
+.product-price span { font-size:12px; }
+.product-unit { font-size:11px; color:#999; }
+.add-btn { width:28px; height:28px; border-radius:50%; background:#0a7cbf; color:#fff; border:none; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.add-btn:active { background:#0665a0; }
+
+.overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.4); z-index:200; display:none; }
+.overlay.show { display:block; }
+.cart-panel { position:fixed; bottom:0; left:50%; transform:translateX(-50%) translateY(100%); width:100%; max-width:480px; background:#fff; border-radius:16px 16px 0 0; z-index:201; transition:transform .3s; max-height:70vh; display:flex; flex-direction:column; }
+.cart-panel.show { transform:translateX(-50%) translateY(0); }
+.cart-header { display:flex; justify-content:space-between; align-items:center; padding:16px; border-bottom:1px solid #f0f0f0; }
+.cart-header h3 { font-size:16px; }
+.cart-clear { font-size:13px; color:#999; background:none; border:none; cursor:pointer; }
+.cart-items { flex:1; overflow-y:auto; padding:8px 16px; }
+.cart-item { display:flex; align-items:center; gap:10px; padding:12px 0; border-bottom:1px solid #f5f5f5; }
+.cart-item-img { width:50px; height:50px; border-radius:8px; background:#e8f4f8; display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; overflow:hidden; }
+.cart-item-img svg { width:100%; height:100%; }
+.cart-item-info { flex:1; }
+.cart-item-name { font-size:14px; font-weight:500; }
+.cart-item-price { font-size:12px; color:#999; margin-top:2px; }
+.cart-item-qty { display:flex; align-items:center; gap:8px; }
+.qty-btn { width:26px; height:26px; border-radius:50%; border:1px solid #ddd; background:#fff; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.qty-btn:active { background:#f0f0f0; }
+.qty-num { font-size:14px; min-width:20px; text-align:center; }
+.cart-empty { text-align:center; padding:40px 0; color:#ccc; font-size:40px; }
+.cart-empty p { font-size:14px; color:#999; margin-top:8px; }
+.cart-footer { padding:12px 16px; border-top:1px solid #f0f0f0; }
+.cart-total { display:flex; justify-content:space-between; margin-bottom:12px; font-size:15px; font-weight:600; }
+.cart-total .price { color:#ff4444; font-size:18px; }
+.checkout-btn { width:100%; padding:14px; background:linear-gradient(135deg,#0a7cbf,#0665a0); color:#fff; border:none; border-radius:12px; font-size:16px; font-weight:600; cursor:pointer; }
+.checkout-btn:active { opacity:.9; }
+
+.order-modal { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.5); z-index:300; display:none; overflow-y:auto; padding:20px 0; }
+.order-modal.show { display:block; }
+.order-form { background:#fff; width:90%; max-width:420px; margin:20px auto; border-radius:16px; padding:20px; }
+.order-form h3 { font-size:18px; margin-bottom:16px; text-align:center; }
+.form-group { margin-bottom:14px; }
+.form-group label { display:block; font-size:13px; color:#666; margin-bottom:4px; }
+.form-group input,.form-group select,.form-group textarea { width:100%; padding:10px 12px; border:1px solid #e0e0e0; border-radius:8px; font-size:14px; outline:none; transition:border .2s; }
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus { border-color:#0a7cbf; }
+.form-group textarea { height:60px; resize:none; }
+.form-group select { appearance:none; background:#fff url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' stroke='%23999' fill='none'/></svg>") no-repeat right 12px center; cursor:pointer; }
+.order-summary { background:#f8f8f8; border-radius:8px; padding:12px; margin-bottom:14px; font-size:13px; }
+.order-summary .row { display:flex; justify-content:space-between; margin-bottom:4px; }
+.order-summary .total { font-weight:700; color:#ff4444; font-size:15px; margin-top:6px; padding-top:6px; border-top:1px solid #e0e0e0; }
+.btn-row { display:flex; gap:10px; }
+.btn-row button { flex:1; padding:12px; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; border:none; }
+.btn-cancel { background:#f0f0f0; color:#666; }
+.btn-submit { background:linear-gradient(135deg,#ff6b35,#ff4444); color:#fff; }
+.btn-submit:active { opacity:.9; }
+
+.success-page { display:none; text-align:center; padding:40px 20px; }
+.success-page .icon { font-size:60px; margin-bottom:16px; }
+.success-page h2 { color:#0a7cbf; margin-bottom:8px; }
+.success-page .order-no { background:#f0f8ff; display:inline-block; padding:6px 16px; border-radius:20px; font-size:13px; color:#0a7cbf; margin:12px 0; }
+.success-page .tips { background:#fff; border-radius:12px; padding:16px; margin:16px 0; text-align:left; font-size:13px; color:#666; line-height:1.8; }
+.success-page .tips strong { color:#333; }
+
+.toast { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,.75); color:#fff; padding:10px 20px; border-radius:20px; font-size:14px; z-index:400; pointer-events:none; opacity:0; transition:opacity .25s; }
+.toast.show { opacity:1; }
+
+.footer-bar { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:#fff; padding:10px 16px; display:flex; align-items:center; gap:10px; box-shadow:0 -2px 8px rgba(0,0,0,.06); z-index:50; }
+.footer-cart-btn { position:relative; width:44px; height:44px; background:#0a7cbf; border-radius:50%; border:none; color:#fff; font-size:22px; cursor:pointer; flex-shrink:0; }
+.footer-cart-btn .badge { position:absolute; top:-4px; right:-4px; background:#ff4444; color:#fff; font-size:10px; min-width:18px; height:18px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-weight:700; display:none; }
+.footer-info { flex:1; }
+.footer-price { color:#ff4444; font-weight:700; font-size:16px; }
+.footer-count { font-size:11px; color:#999; }
+.footer-checkout { padding:10px 20px; background:linear-gradient(135deg,#ff6b35,#ff4444); color:#fff; border:none; border-radius:20px; font-size:14px; font-weight:600; cursor:pointer; }
+.footer-checkout:disabled { background:#ccc; }.footer-checkout:disabled { background:#ccc; }
+
+/* Floating order lookup button */
+.float-btn { position:fixed; right:12px; bottom:100px; width:48px; height:48px; border-radius:50%; background:#fff; box-shadow:0 2px 12px rgba(0,0,0,.15); border:none; font-size:20px; cursor:pointer; z-index:49; display:flex; align-items:center; justify-content:center; }
+.float-btn:active { background:#f5f5f5; }
+
+/* Order lookup panel */
+.lookup-panel { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.5); z-index:250; display:none; }
+.lookup-panel.show { display:block; }
+.lookup-card { background:#fff; width:90%; max-width:380px; margin:60px auto; border-radius:16px; padding:20px; }
+.lookup-card h3 { text-align:center; margin-bottom:16px; font-size:17px; }
+.lookup-card .order-detail { background:#f8f8f8; border-radius:8px; padding:12px; margin:12px 0; font-size:13px; line-height:1.8; }
+.lookup-card .status-badge { display:inline-block; padding:4px 12px; border-radius:10px; font-size:12px; font-weight:600; }
+.lookup-card .empty-lookup { text-align:center; padding:30px 0; color:#999; }
+.lookup-error { color:#ff4444; font-size:12px; text-align:center; margin-top:8px; display:none; }
+
+/* Save prompt in success page */
+.save-prompt { background:#fffbe6; border:1px solid #ffe58f; border-radius:10px; padding:12px; margin:12px 0; text-align:left; font-size:12px; color:#666; line-height:1.8; }
+.save-prompt strong { color:#d48806; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>🦐 朱家尖海鲜配送</h1>
+      <div class="header-sub">扫码下单 · 配送到车 · 新鲜保证</div>
+    </div>
+  </div>
+</div>
+
+<div class="banner">
+  <div class="banner-icon">🚗</div>
+  <div class="banner-text">
+    <h3>逛完景点，海鲜已在你后备箱</h3>
+    <p>下单后30分钟配送到停车场/民宿</p>
+  </div>
+</div>
+
+<div class="cats" id="catTabs">
+  <div class="cat-tab active" data-cat="all">🔥 全部</div>
+  <div class="cat-tab" data-cat="ice">🧊 冰鲜</div>
+  <div class="cat-tab" data-cat="live">🦀 活鲜</div>
+  <div class="cat-tab" data-cat="dry">📦 干货特产</div>
+  <div class="cat-tab" data-cat="gift">🎁 礼盒套餐</div>
+</div>
+
+<div class="products" id="productList"></div>
+
+<div class="footer-bar" id="footerBar">
+  <div class="footer-cart-btn" onclick="toggleCart()">
+    🛒
+    <span class="badge" id="footerBadge">0</span>
+  </div>
+  <div class="footer-info">
+    <div class="footer-price" id="footerTotal">¥0</div>
+    <div class="footer-count" id="footerCount">未选商品</div>
+  </div>
+  <button class="footer-checkout" id="footerCheckout" disabled onclick="openOrderForm()">去下单</button>
+</div>
+
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-header">
+    <h3>🛒 购物车</h3>
+    <button class="cart-clear" onclick="clearCart()">清空</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer">
+    <div class="cart-total"><span>合计</span><span class="price" id="cartTotal">¥0</span></div>
+    <button class="checkout-btn" onclick="openOrderForm()">立即下单</button>
+  </div>
+</div>
+
+<!-- Floating order lookup button -->
+<button class="float-btn" onclick="openLookup()" title="我的订单">📋</button>
+
+<!-- Order Lookup Panel -->
+<div class="lookup-panel" id="lookupPanel">
+  <div class="lookup-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h3 style="margin:0;">📋 查询订单</h3>
+      <button style="background:none;border:none;font-size:20px;cursor:pointer;" onclick="closeLookup()">✕</button>
+    </div>
+    <div class="form-group"><label>输入下单手机号</label><input type="tel" id="lookupPhone" placeholder="11位手机号" maxlength="11"></div>
+    <button class="checkout-btn" onclick="lookupOrders()" style="margin-top:8px;">查询订单</button>
+    <div class="lookup-error" id="lookupError"></div>
+    <div id="lookupResults"></div>
+  </div>
+</div>
+<div class="order-modal" id="orderModal">
+  <div class="order-form" id="orderFormEl">
+    <h3>📋 确认订单</h3>
+    <div class="order-summary" id="orderSummary"></div>
+    <div class="form-group"><label>联系人姓名 *</label><input type="text" id="inputName" placeholder="怎么称呼您"></div>
+    <div class="form-group"><label>手机号码 *</label><input type="tel" id="inputPhone" placeholder="配送联系用"></div>
+    <div class="form-group"><label>车牌号</label><input type="text" id="inputPlate" placeholder="例：浙A12345（方便找到您的车）"></div>
+    <div class="form-group"><label>配送位置 *</label>
+      <select id="inputLocation">
+        <option value="">请选择配送位置</option>
+        <option>蜈蚣峙码头停车场</option>
+        <option>朱家尖民宿/酒店</option>
+        <option>南沙景区停车场</option>
+        <option>东沙景区停车场</option>
+        <option>大青山景区停车场</option>
+        <option>其他位置（备注说明）</option>
+      </select>
+    </div>
+    <div class="form-group"><label>备注</label><textarea id="inputNote" placeholder="如：白色特斯拉、民宿名称、特殊要求等"></textarea></div>
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="closeOrderForm()">再想想</button>
+      <button class="btn-submit" onclick="submitOrder()">确认下单</button>
+    </div>
+  </div>
+  <div class="success-page" id="successPage" style="display:none;">
+    <div class="icon">✅</div>
+    <h2>下单成功！</h2>
+    <p style="color:#666;margin:8px 0;">我们会尽快配送到您的指定位置</p>
+    <div class="order-no" id="orderNoDisplay"></div>
+    <div class="save-prompt">
+  <strong>💡 下次怎么找到我们？</strong><br>
+  方法一：<strong>收藏本页面</strong>（浏览器菜单→收藏/添加到桌面）<br>
+  方法二：<strong>截图保存二维码</strong>，下次扫码直接进<br>
+  方法三：记住店名"<strong>朱家尖海鲜配送</strong>"，微信搜一搜
+</div>
+<div class="tips"><strong>📌 温馨提示：</strong><br>1. 使用下单手机号可随时查询订单状态<br>2. 配送员会电话联系您确认具体位置<br>3. 请保持手机畅通<br>4. 如需取消，请在配送前联系客服<br>5. 海鲜请尽快冷藏保存</div>
+            <div id="paymentSection"></div>
+    <button class="checkout-btn" style="width:auto;padding:12px 32px;margin-top:8px;" onclick="resetShop()">继续选购</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ SVG PRODUCT IMAGES ============
+const productImages = {
+  // 舟山带鱼 - long silver ribbonfish
+  "带鱼": `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#d4dce8"/><stop offset="50%" stop-color="#a8b8cc"/><stop offset="100%" stop-color="#e8ecf2"/></linearGradient></defs><rect width="200" height="140" fill="#e8f0f8"/><ellipse cx="100" cy="50" rx="90" ry="8" fill="url(#fg1)" stroke="#8898aa" stroke-width="1"/><ellipse cx="100" cy="65" rx="88" ry="7" fill="url(#fg1)" stroke="#8898aa" stroke-width="1"/><ellipse cx="100" cy="80" rx="90" ry="8" fill="url(#fg1)" stroke="#8898aa" stroke-width="1"/><circle cx="25" cy="65" r="3" fill="#334"/><text x="30" y="69" font-size="8" fill="#334">Radar Net</text></svg>`,
+  // 大黄鱼
+  "大黄鱼": `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="yg1" cx="50%" cy="40%"><stop offset="0%" stop-color="#ffe8b0"/><stop offset="60%" stop-color="#f5c842"/><stop offset="100%" stop-color="#d4a020"/></radialGradient></defs><rect width="200" height="140" fill="#e8f4f0"/><ellipse cx="100" cy="70" rx="75" ry="25" fill="url(#yg1)" stroke="#c8941a" stroke-width="1.5"/><ellipse cx="100" cy="55" rx="60" ry="4" fill="#f0d060" opacity="0.6"/><circle cx="35" cy="65" r="4" fill="#222"/><path d="M160,55 Q180,40 175,55" fill="none" stroke="#c8941a" stroke-width="2"/></svg>`,
+  // 鲳鱼 - silver pomfret, diamond shape
+  "鲳鱼": `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pomfretGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f5f7fa"/><stop offset="30%" stop-color="#d9dfe8"/><stop offset="60%" stop-color="#bcc5d4"/><stop offset="100%" stop-color="#eef0f4"/></linearGradient><radialGradient id="pomfretShine" cx="40%" cy="35%"><stop offset="0%" stop-color="#fff" stop-opacity="0.8"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient><linearGradient id="pomfretFin" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#dde3ee"/><stop offset="100%" stop-color="#a0adc0"/></linearGradient></defs><rect width="200" height="140" fill="#e6ecf2"/><!-- body - diamond shape --><path d="M100,8 L180,70 L100,132 L20,70 Z" fill="url(#pomfretGrad)" stroke="#8a97a8" stroke-width="1.5"/><!-- body shine --><path d="M100,8 L180,70 L100,132 L20,70 Z" fill="url(#pomfretShine)"/><!-- dorsal fin --><path d="M110,12 Q130,2 150,12 Q160,18 165,25 Q155,20 140,18 Q122,16 110,20 Z" fill="url(#pomfretFin)" stroke="#8a97a8" stroke-width="0.8"/><!-- tail fin --><path d="M176,62 Q192,50 195,70 Q192,90 176,78" fill="url(#pomfretFin)" stroke="#8a97a8" stroke-width="0.8"/><!-- pectoral fin --><path d="M60,55 Q45,50 40,60 Q48,58 58,60" fill="url(#pomfretFin)" stroke="#8a97a8" stroke-width="0.8"/><!-- eye --><circle cx="40" cy="68" r="5" fill="#222"/><circle cx="38" cy="66" r="2" fill="#fff"/><!-- mouth --><path d="M24,72 Q20,74 24,76" fill="none" stroke="#667" stroke-width="1"/><!-- gill line --><path d="M50,55 Q48,70 50,85" fill="none" stroke="#aab5c2" stroke-width="1" opacity="0.7"/><!-- scales hint --><path d="M70,50 Q80,60 70,70 M90,40 Q100,60 90,80 M110,35 Q120,60 110,85 M130,38 Q140,60 130,82 M150,45 Q158,60 150,75" fill="none" stroke="#cdd5e0" stroke-width="0.7" opacity="0.6"/></svg>`,
+  // 墨鱼
+  "墨鱼": `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="mg1" cx="50%" cy="50%"><stop offset="0%" stop-color="#c8b8d8"/><stop offset="100%" stop-color="#7a6888"/></radialGradient></defs><rect width="200" height="140" fill="#e8f0f8"/><ellipse cx="100" cy="70" rx="45" ry="30" fill="url(#mg1)" stroke="#5a4870" stroke-width="1.5"/><path d="M55,70 Q30,55 25,65 Q30,75 55,70" fill="#b8a8c8"/><path d="M100,40 Q90,15 105,20 Q110,35 105,40" fill="#a898b8"/></svg>`,
+  // 红膏呛蟹
+  "呛蟹": `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="cg1" cx="50%" cy="50%"><stop offset="0%" stop-color="#ffb8a0"/><stop offset="100%" stop-color="#d86040"/></radialGradient></defs><rect width="200" height="140" fill="#f0eee8"/><ellipse cx="100" cy="70" rx="55" ry="40" fill="url(#cg1)" stroke="#b8402a" stroke-width="2"/><ellipse cx="100" cy="55" rx="30" ry="15" fill="#ffe8d0" opacity="0.5"/><circle cx="75" cy="60" r="5" fill="#333"/><circle cx="125" cy="60" r="5" fill="#333"/></svg>`,
+  // 梭子蟹
+  "梭子蟹": `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="sc1" cx="50%" cy="50%"><stop offset="0%" stop-color="#e8c0a8"/><stop offset="100%" stop-color="#c87040"/></radialGradient></defs><rect width="200" height="140" fill="#e8f0f8"/><ellipse cx="100" cy="70" rx="50" ry="35" fill="url(#sc1)" stroke="#a85030" stroke-width="2"/><path d="M50,55 L30,35 L40,55 M150,55 L170,35 L160,55 M45,80 L20,85 L40,85 M155,80 L180,85 L160,85" fill="none" stroke="#c87040" stroke-width="3" stroke-linecap="round"/><circle cx="70" cy="60" r="3" fill="#222"/><circle cx="130" cy="60" r="3" fill="#222"/></svg>`,
+  // 皮皮虾
+  "皮皮虾": `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pp1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f0d8c0"/><stop offset="50%" stop-color="#e8b898"/><stop offset="100%" stop-color="#f8e8d8"/></linearGradient></defs><rect width="200" height="140" fill="#e8f4f0"/><path d="M30,65 L170,55 L175,75 L30,80 Z" fill="url(#pp1)" stroke="#c89060" stroke-width="1.5"/><path d="M40,65 L45,45 L55,55 L65,42 L75,53" fill="none" stroke="#d4a070" stroke-width="2"/></svg>`,
+  // 基围虾
+  "基围虾": `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="kg1" cx="50%" cy="50%"><stop offset="0%" stop-color="#f8e0d0"/><stop offset="100%" stop-color="#e0a888"/></radialGradient></defs><rect width="200" height="140" fill="#e8f4f0"/><path d="M30,70 Q100,55 170,65 Q175,75 170,80 Q100,75 30,80 Z" fill="url(#kg1)" stroke="#c88860" stroke-width="1"/><path d="M165,65 L185,55 L175,72" fill="none" stroke="#e0a888" stroke-width="2"/></svg>`,
+  // 花蛤
+  "花蛤": `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="hg1" cx="50%" cy="40%"><stop offset="0%" stop-color="#f8f0e8"/><stop offset="60%" stop-color="#e0d4c4"/><stop offset="100%" stop-color="#c8b898"/></radialGradient></defs><rect width="200" height="140" fill="#e8f4f8"/><ellipse cx="100" cy="70" rx="40" ry="28" fill="url(#hg1)" stroke="#b8a080" stroke-width="1.5"/><path d="M70,55 Q100,48 130,55" fill="none" stroke="#d0c4b0" stroke-width="1"/></svg>`,
+  // 虾皮 - many small shrimp
+  "虾皮": `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="140" fill="#faf8f4"/><circle cx="50" cy="50" r="8" fill="#f0c0a0" stroke="#d89878" stroke-width="0.5"/><circle cx="70" cy="55" r="7" fill="#f0c0a0" stroke="#d89878" stroke-width="0.5"/><circle cx="60" cy="70" r="7" fill="#f0c0a0" stroke="#d89878" stroke-width="0.5"/><circle cx="90" cy="60" r="8" fill="#f0c0a0" stroke="#d89878" stroke-width="0.5"/><circle cx="110" cy="50" r="7" fill="#f0c0a0" stroke="#d89878" stroke-width="0.5"/><circle cx="130" cy="65" r="8" fill="#f0c0a0" stroke="#d89878" stroke-width="0.5"/><circle cx="80" cy="80" r="6" fill="#f0c0a0" stroke="#d89878" stroke-width="0.5"/><circle cx="140" cy="55" r="7" fill="#f0c0a0" stroke="#d89878" stroke-width="0.5"/><circle cx="120" cy="75" r="6" fill="#f0c0a0" stroke="#d89878" stroke-width="0.5"/></svg>`,
+  // 鱿鱼丝
+  "鱿鱼丝": `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="140" fill="#faf6f0"/><rect x="30" y="40" width="140" height="8" rx="3" fill="#e8d0b8"/><rect x="20" y="55" width="160" height="8" rx="3" fill="#f0d8c0"/><rect x="35" y="70" width="130" height="8" rx="3" fill="#e8c8a8"/><rect x="25" y="85" width="150" height="8" rx="3" fill="#f0d4b8"/></svg>`,
+  // 紫菜
+  "紫菜": `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="140" fill="#f8f6f0"/><rect x="30" y="25" width="140" height="90" rx="3" fill="#3a2a1a" opacity="0.85"/><rect x="30" y="25" width="140" height="90" rx="3" fill="#2a1a10" opacity="0.4"/><text x="100" y="78" text-anchor="middle" font-size="14" fill="#fff" opacity="0.5" font-family="serif">Purple Laver</text></svg>`,
+  // 鱼片干
+  "鱼片干": `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="140" fill="#faf6f0"/><ellipse cx="70" cy="55" rx="40" ry="18" fill="#e8c898" stroke="#d0a870" stroke-width="1"/><ellipse cx="130" cy="70" rx="38" ry="18" fill="#e8c898" stroke="#d0a870" stroke-width="1"/><ellipse cx="100" cy="90" rx="42" ry="16" fill="#e0c090" stroke="#d0a870" stroke-width="1"/></svg>`,
+  // 礼盒
+  "礼盒": `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="140" fill="#f8f4f0"/><rect x="30" y="25" width="140" height="95" rx="8" fill="#d44030"/><rect x="30" y="60" width="140" height="6" fill="#f0d060"/><rect x="50" y="25" width="6" height="95" fill="#f0d060"/><rect x="140" y="25" width="6" height="95" fill="#f0d060"/><circle cx="100" cy="70" r="15" fill="none" stroke="#f0d060" stroke-width="3"/></svg>`
+};
+
+// ============ PRODUCT DATA ============
+// Load products from localStorage (synced with admin panel)
+const STORAGE_KEY = "seafood_shop_products";
+function loadShopProducts() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) { try { const data = JSON.parse(raw); if (data.length > 0) return data; } catch(e) {} }
+  return defaultProducts;
+}
+const defaultProducts = [
+  { id:1, name:"舟山带鱼（中段）", cat:"ice", imgKey:"带鱼", desc:"本地雷达网带鱼，肉嫩鲜美", price:68, unit:"斤", tag:"爆款" },
+  { id:2, name:"东海大黄鱼", cat:"ice", imgKey:"大黄鱼", desc:"舟山野生大黄鱼，蒜瓣肉", price:158, unit:"条(500g)", tag:"" },
+  { id:3, name:"舟山鲳鱼", cat:"ice", imgKey:"鲳鱼", desc:"平川鲳鱼，刺少肉多", price:88, unit:"斤", tag:"" },
+  { id:4, name:"墨鱼/目鱼", cat:"ice", imgKey:"墨鱼", desc:"新鲜墨鱼，白灼红烧皆可", price:45, unit:"斤", tag:"" },
+  { id:5, name:"红膏呛蟹", cat:"ice", imgKey:"呛蟹", desc:"舟山招牌，咸鲜入味", price:98, unit:"只", tag:"招牌" },
+  { id:6, name:"舟山梭子蟹", cat:"live", imgKey:"梭子蟹", desc:"鲜活梭子蟹，膏肥肉满", price:128, unit:"斤", tag:"时令" },
+  { id:7, name:"皮皮虾/虾蛄", cat:"live", imgKey:"皮皮虾", desc:"鲜活虾蛄，椒盐一绝", price:78, unit:"斤", tag:"" },
+  { id:8, name:"基围虾", cat:"live", imgKey:"基围虾", desc:"活蹦乱跳，白灼最佳", price:68, unit:"斤", tag:"" },
+  { id:9, name:"花蛤/文蛤", cat:"live", imgKey:"花蛤", desc:"吐好沙的，辣炒鲜美", price:18, unit:"斤", tag:"实惠" },
+  { id:10, name:"舟山虾皮", cat:"dry", imgKey:"虾皮", desc:"淡干虾皮，补钙首选", price:35, unit:"袋(250g)", tag:"必买" },
+  { id:11, name:"鱿鱼丝/墨鱼丝", cat:"dry", imgKey:"鱿鱼丝", desc:"即食海鲜零食，追剧必备", price:28, unit:"袋(200g)", tag:"" },
+  { id:12, name:"紫菜（头水）", cat:"dry", imgKey:"紫菜", desc:"头水紫菜，煮汤鲜掉眉毛", price:32, unit:"包(100g)", tag:"" },
+  { id:13, name:"舟山鱼片干", cat:"dry", imgKey:"鱼片干", desc:"马鲛鱼片干，嚼劲十足", price:25, unit:"袋(200g)", tag:"" },
+  { id:14, name:"海鲜零食礼包", cat:"gift", imgKey:"礼盒", desc:"虾皮+鱿鱼丝+鱼片+紫菜组合", price:108, unit:"套", tag:"送礼" },
+  { id:15, name:"冰鲜三件套", cat:"gift", imgKey:"礼盒", desc:"带鱼+鲳鱼+墨鱼，泡沫箱打包", price:188, unit:"套", tag:"划算" },
+  { id:16, name:"豪华海鲜礼盒", cat:"gift", imgKey:"礼盒", desc:"黄鱼+梭子蟹+带鱼+鲳鱼+虾皮", price:388, unit:"套", tag:"高端" }
+];
+
+];
+
+let products = loadShopProducts();
+let cart = [];
+let currentCat = "all";
+
+// Refresh products from localStorage (call after admin changes)
+function refreshProducts() { products = loadShopProducts(); renderProducts(); }
+window.addEventListener("storage", function(e) { if (e.key === STORAGE_KEY) { refreshProducts(); } });
+
+function renderProducts() {
+  const list = document.getElementById("productList");
+  const filtered = currentCat === "all" ? products : products.filter(p => p.cat === currentCat);
+  list.innerHTML = filtered.map(p => `
+    <div class="product-card">
+      <div class="product-img" onclick="addToCart(${p.id})">
+        ${p.img ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;" alt="${p.name}">` : (productImages[p.imgKey] || "🐟")}
+        ${p.tag ? `<span class="product-tag">${p.tag}</span>` : ""}
+      </div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-bottom">
+          <div>
+            <span class="product-price"><span>¥</span>${p.price}</span>
+            <span class="product-unit"> /${p.unit}</span>
+          </div>
+          <button class="add-btn" onclick="addToCart(${p.id})">+</button>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderCart() {
+  const container = document.getElementById("cartItems");
+  if (cart.length === 0) {
+    container.innerHTML = '<div class="cart-empty">🛒<p>购物车是空的</p></div>';
+  } else {
+    container.innerHTML = cart.map((item,idx) => `
+      <div class="cart-item">
+        <div class="cart-item-img">${item.img ? `<img src="${item.img}" style="width:100%;height:100%;object-fit:cover;" alt="${item.name}">` : (productImages[item.imgKey] || "🐟")}</div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-price">¥${item.price}/${item.unit}</div>
+        </div>
+        <div class="cart-item-qty">
+          <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
+        </div>
+      </div>
+    `).join("");
+  }
+  updateTotals();
+}
+
+function updateTotals() {
+  const count = cart.reduce((s,i) => s + i.qty, 0);
+  const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
+  document.getElementById("cartTotal").textContent = "¥" + total;
+  document.getElementById("footerTotal").textContent = "¥" + total;
+  document.getElementById("footerCount").textContent = count > 0 ? `共${count}件商品` : "未选商品";
+  const badge = document.getElementById("footerBadge");
+  if (count > 0) { badge.style.display="flex"; badge.textContent=count; }
+  else { badge.style.display="none"; }
+  document.getElementById("footerCheckout").disabled = count === 0;
+}
+
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  const existing = cart.find(x => x.id === id);
+  if (existing) { existing.qty++; }
+  else { cart.push({ id:p.id, name:p.name, imgKey:p.imgKey, img:p.img, price:p.price, unit:p.unit, qty:1 }); }
+  renderCart();
+  showToast(`已加入：${p.name}`);
+}
+
+function changeQty(idx, delta) {
+  cart[idx].qty += delta;
+  if (cart[idx].qty <= 0) { cart.splice(idx,1); }
+  renderCart();
+}
+
+function clearCart() { cart=[]; renderCart(); showToast("购物车已清空"); }
+
+function toggleCart() {
+  document.getElementById("cartPanel").classList.toggle("show");
+  document.getElementById("overlay").classList.toggle("show");
+  renderCart();
+}
+
+function openOrderForm() {
+  if (cart.length === 0) { showToast("请先选择商品"); return; }
+  document.getElementById("cartPanel").classList.remove("show");
+  document.getElementById("overlay").classList.remove("show");
+  const summary = cart.map(i => `<div class="row"><span>${i.name} ×${i.qty}</span><span>¥${i.price * i.qty}</span></div>`).join("");
+  const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
+  document.getElementById("orderSummary").innerHTML = summary + `<div class="row total"><span>合计</span><span>¥${total}</span></div>`;
+  document.getElementById("orderModal").classList.add("show");
+  document.getElementById("orderFormEl").style.display = "block";
+  document.getElementById("successPage").style.display = "none";
+}
+
+function closeOrderForm() { document.getElementById("orderModal").classList.remove("show"); }
+
+const ORDERS_KEY = "seafood_shop_orders";
+
+function submitOrder() {
+  const name = document.getElementById("inputName").value.trim();
+  const phone = document.getElementById("inputPhone").value.trim();
+  const plate = document.getElementById("inputPlate").value.trim();
+  const location = document.getElementById("inputLocation").value;
+  const note = document.getElementById("inputNote").value.trim();
+  if (!name) { showToast("请填写联系人姓名"); return; }
+  if (!phone || !/^1\d{10}$/.test(phone)) { showToast("请填写正确的手机号码"); return; }
+  if (!location) { showToast("请选择配送位置"); return; }
+  const orderNo = "ZS" + Date.now().toString(36).toUpperCase();
+  const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
+  const order = { orderNo, name, phone, plate: plate || "未提供", location, note, total, items: cart.map(i => ({ name:i.name, qty:i.qty, price:i.price })), time: new Date().toLocaleString() };
+    // Save to localStorage for admin panel
+  const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || "[]");
+  orders.unshift({...order, status:"待确认", paid:false});
+  localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+  console.log("新订单:", JSON.stringify(order, null, 2));
+  document.getElementById("orderFormEl").style.display = "none";
+    document.getElementById("successPage").style.display = "block";
+  // Show payment info
+  const settings = JSON.parse(localStorage.getItem("seafood_shop_settings") || "{}");
+  const payQr = settings.payQr || "";
+  document.getElementById("paymentSection").innerHTML = payQr 
+    ? '<div style="margin-top:16px;text-align:center"><p style="font-weight:600;margin-bottom:8px;">请扫码支付 ¥'+total+'</p><img src="'+payQr+'" style="width:180px;border-radius:8px;" alt="收款码"><p style="font-size:12px;color:#999;margin-top:4px;">支付后我们会尽快配送</p></div>'
+    : '<div style="margin-top:16px;background:#fffbe6;padding:12px;border-radius:8px;text-align:center;font-size:14px;">💰 支持<strong>货到付款</strong>，配送员会当面收款</div>';
+  document.getElementById("orderNoDisplay").textContent = "订单号：" + orderNo;
+  cart = []; renderCart();
+  document.getElementById("inputName").value = "";
+  document.getElementById("inputPhone").value = "";
+  document.getElementById("inputPlate").value = "";
+  document.getElementById("inputLocation").value = "";
+  document.getElementById("inputNote").value = "";
+}
+
+function resetShop() {
+  document.getElementById("orderModal").classList.remove("show");
+  document.getElementById("orderFormEl").style.display = "block";
+  document.getElementById("successPage").style.display = "none";
+}
+
+document.getElementById("catTabs").addEventListener("click", function(e) {
+  if (e.target.classList.contains("cat-tab")) {
+    document.querySelectorAll(".cat-tab").forEach(t => t.classList.remove("active"));
+    e.target.classList.add("active");
+    currentCat = e.target.dataset.cat;
+    renderProducts();
+  }
+});
+
+// ============ ORDER LOOKUP ============
+function openLookup() {
+  document.getElementById("lookupPanel").classList.add("show");
+  document.getElementById("lookupPhone").value = "";
+  document.getElementById("lookupResults").innerHTML = "";
+  document.getElementById("lookupError").style.display = "none";
+}
+function closeLookup() {
+  document.getElementById("lookupPanel").classList.remove("show");
+}
+function lookupOrders() {
+  const phone = document.getElementById("lookupPhone").value.trim();
+  const errorEl = document.getElementById("lookupError");
+  const resultsEl = document.getElementById("lookupResults");
+  errorEl.style.display = "none";
+  resultsEl.innerHTML = "";
+  if (!phone || !/^1\d{10}$/.test(phone)) {
+    errorEl.textContent = "请输入正确的11位手机号";
+    errorEl.style.display = "block";
+    return;
+  }
+  const orders = JSON.parse(localStorage.getItem("seafood_shop_orders") || "[]");
+  const found = orders.filter(o => o.phone === phone);
+  if (found.length === 0) {
+    resultsEl.innerHTML = '<div class="empty-lookup">🔍<p>未找到该手机号的订单</p><p style="font-size:11px;color:#bbb;">新下单请返回首页选购</p></div>';
+    return;
+  }
+  const statusColors = {"待确认":"#ff6b35","备货中":"#0a7cbf","配送中":"#28a745","已完成":"#666","已取消":"#ccc"};
+  resultsEl.innerHTML = found.map(o => {
+    const sc = statusColors[o.status] || "#666";
+    return '<div class="order-detail">' +
+      '<div style="display:flex;justify-content:space-between;margin-bottom:8px;">' +
+        '<span style="font-size:11px;color:#999;">'+o.orderNo+'</span>' +
+        '<span class="status-badge" style="background:'+sc+'20;color:'+sc+';">'+o.status+'</span>' +
+      '</div>' +
+      '<div style="margin-bottom:4px;">'+o.items.map(x=>x.name+'×'+x.qty).join(' | ')+'</div>' +
+      '<div style="display:flex;justify-content:space-between;">' +
+        '<span style="color:#999;font-size:12px;">'+o.location+'</span>' +
+        '<span style="font-weight:600;color:#ff4444;">¥'+o.total+' '+(o.paid?'<span style="color:#28a745;font-size:11px;">已付</span>':'<span style="color:#ff6b35;font-size:11px;">未付</span>')+'</span>' +
+      '</div>' +
+      '<div style="font-size:11px;color:#bbb;margin-top:4px;">'+o.time+'</div>' +
+    '</div>';
+  }).join("");
+}
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(t._timeout);
+  t._timeout = setTimeout(() => t.classList.remove("show"), 1500);
+}
+
+renderProducts();
+renderCart();
+</script>
+</body>
+</html>
