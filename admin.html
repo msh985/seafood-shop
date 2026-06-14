@@ -124,21 +124,10 @@ tr:hover td { background:#fafcfd; }
     <input type="password" id="adminGatePwd" placeholder="输入密码" style="width:100%;padding:12px 16px;border:1px solid #ddd;border-radius:10px;font-size:15px;text-align:center;outline:none;margin-bottom:12px;">
     <button id="adminGateBtn" style="width:100%;padding:12px;background:#0a7cbf;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">进入管理</button>
 <script>
-
-// Global error protection
-window.onerror = function(msg, url, line) {
-  var gate = document.getElementById('adminLoginGate');
-  if (gate && gate.style.display !== 'none') {
-    // If login gate is still visible, ensure it stays visible
-    gate.style.display = 'flex';
-  }
-  console.warn('Error: ' + msg + ' at line ' + line);
-  return false;
-};
 document.getElementById("adminGateBtn").onclick = function() {
   var i = document.getElementById("adminGatePwd");
   var g = document.getElementById("adminLoginGate");
-  if (i.value === "mashihong199856") { g.style.display = "none"; try { sessionStorage.setItem('admin_logged_in','1'); } catch(e){} }
+  if (i.value === "mashihong199856") { g.style.display = "none"; }
   else { i.value = ""; document.getElementById("adminGateError").style.display = "block"; }
 };
 document.getElementById("adminGatePwd").onkeydown = function(e) {
@@ -351,10 +340,10 @@ document.getElementById("adminGatePwd").onkeydown = function(e) {
 
 <script>
 // ============ DATA STORE ============
-var STORAGE_KEY = "seafood_shop_products";
-var SETTINGS_KEY = "seafood_shop_settings";
+const STORAGE_KEY = "seafood_shop_products";
+const SETTINGS_KEY = "seafood_shop_settings";
 
-var defaultProducts = [
+const defaultProducts = [
   { id:1, name:"舟山带鱼（中段）", cat:"ice", img:"", desc:"本地雷达网带鱼，肉嫩鲜美", price:68, unit:"斤", tag:"爆款", sort:1, published:true },
   { id:2, name:"东海大黄鱼", cat:"ice", img:"", desc:"舟山野生大黄鱼，蒜瓣肉", price:158, unit:"条(500g)", tag:"", sort:2, published:true },
   { id:3, name:"舟山鲳鱼", cat:"ice", img:"", desc:"平川鲳鱼，刺少肉多", price:88, unit:"斤", tag:"", sort:3, published:true },
@@ -374,7 +363,7 @@ var defaultProducts = [
 ];
 
 function loadProducts() {
-  var raw = (function(){try{return localStorage.getItem(STORAGE_KEY)}catch(e){return null}})();
+  const raw = (function(){try{return localStorage.getItem(STORAGE_KEY)}catch(e){return null}})();
   if (raw) {
     try { return JSON.parse(raw); } catch(e) {}
   }
@@ -391,64 +380,64 @@ function saveProducts(data) {
 }
 
 function getNextId() {
-  var products = loadProducts();
+  const products = loadProducts();
   return products.length > 0 ? Math.max.apply(null, products.map(function(p){ return p.id; })) + 1 : 1;
 }
 
 // ============ RENDER TABLE ============
-var catNames = { ice:"冰鲜", live:"活鲜", dry:"干货特产", gift:"礼盒套餐" };
-var catCss = { ice:"cat-ice", live:"cat-live", dry:"cat-dry", gift:"cat-gift" };
+const catNames = { ice:"冰鲜", live:"活鲜", dry:"干货特产", gift:"礼盒套餐" };
+const catCss = { ice:"cat-ice", live:"cat-live", dry:"cat-dry", gift:"cat-gift" };
 
 function renderTable() {
-  var products = loadProducts();
-  var search = (document.getElementById("searchInput").value || "").toLowerCase();
-  var filterEl = document.getElementById("filterCat"); var filter = filterEl ? filterEl.value : "all";
+  let products = loadProducts();
+  const search = (document.getElementById("searchInput").value || "").toLowerCase();
+  const filter = document.getElementById("filterCat").value;
 
   if (search) products = products.filter(function(p){ return p.name.toLowerCase().includes(search); });
   if (filter !== "all") products = products.filter(function(p){ return p.cat === filter; });
-  var statusEl = document.getElementById("filterStatus");
-  if (statusEl && statusEl.value === "published") products = products.filter(function(p){ return p.published !== false; });
-  if (statusEl && statusEl.value === "unpublished") products = products.filter(function(p){ return p.published === false; });
+  var statusFilter = document.getElementById("filterStatus");
+  if (statusFilter && statusFilter.value === "published") products = products.filter(function(p){ return p.published !== false; });
+  if (statusFilter && statusFilter.value === "unpublished") products = products.filter(function(p){ return p.published === false; });
+
   products.sort(function(a,b){ return (a.sort||0) - (b.sort||0); });
 
-  var tbody = document.getElementById("productTableBody");
-  var empty = document.getElementById("emptyState");
+  const tbody = document.getElementById("productTableBody");
+  const empty = document.getElementById("emptyState");
 
   if (products.length === 0) {
     tbody.innerHTML = "";
     empty.style.display = "block";
   } else {
     empty.style.display = "none";
-        tbody.innerHTML = products.map(function(p){
-      var imgHtml = p.img ? '<img src="'+p.img+'" alt="'+p.name+'">' : getEmoji(p.cat);
-      var tagHtml = p.tag ? '<span class="tag-badge">'+p.tag+'</span>' : '-';
-      var pubIcon = p.published!==false ? "🔴" : "🟢";
-      return "<tr>" +
-        "<td><div class='product-thumb'>"+imgHtml+"</div></td>" +
-        "<td><strong>"+p.name+"</strong></td>" +
-        "<td><span class='cat-badge '+(catCss[p.cat]||"")+'">'+(catNames[p.cat]||p.cat)+'</span></td>" +'
-        "<td style='color:#ff4444;font-weight:600;'>¥"+p.price+"</td>" +
-        "<td style='color:#888;'>"+p.unit+"</td>" +
-        "<td>"+tagHtml+"</td>" +
-        "<td>" +
-          "<button class='btn btn-outline btn-sm' onclick='togglePublish('+p.id+')' style='font-size:14px;' title='上架/下架'>"+pubIcon+"</button> " +
-          "<button class='btn btn-outline btn-sm' onclick='openEditModal('+p.id+')'>✏️</button> " +
-          "<button class='btn btn-danger btn-sm' onclick='deleteProduct('+p.id+')'>🗑</button>" +
-        "</td>" +
-        "</tr>";
-    }).join("");
+    tbody.innerHTML = products.map(function(p){ return `
+      <tr>
+        <td>
+          <div class="product-thumb">
+            ${p.img ? `<img src="${p.img}" alt="${p.name}">` : getEmoji(p.cat)}
+          </div>
+        </td>
+        <td><strong>${p.name}</strong></td>
+        <td><span class="cat-badge ${catCss[p.cat]||''}">${catNames[p.cat]||p.cat}</span></td>
+        <td style="color:#ff4444;font-weight:600;">¥${p.price}</td>
+        <td style="color:#888;">${p.unit}</td>
+        <td>${p.tag ? `<span class="tag-badge">${p.tag}</span>` : '-'}</td>
+        <td>
+          <button class="btn btn-outline btn-sm" onclick="togglePublish(${p.id})" style="font-size:14px;" title="上架/下架">${p.published!==false ? "🔴" : "🟢"}</button>\r\n          <button class="btn btn-outline btn-sm" onclick="openEditModal(${p.id})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">🗑</button>
+        </td>
+      </tr>\n  `; }).join("");
   }
 
   updateStats();
 }
 
 function getEmoji(cat) {
-  var map = { ice:"🐟", live:"🦀", dry:"📦", gift:"🎁" };
+  const map = { ice:"🐟", live:"🦀", dry:"📦", gift:"🎁" };
   return map[cat] || "🐟";
 }
 
 function updateStats() {
-  var products = loadProducts();
+  const products = loadProducts();
   document.getElementById("statTotal").textContent = products.length;
   document.getElementById("statIce").textContent = products.filter(function(p){ return p.cat==="ice"; }).length;
   document.getElementById("statLive").textContent = products.filter(function(p){ return p.cat==="live"; }).length;
@@ -456,8 +445,8 @@ function updateStats() {
 }
 
 // ============ MODAL ============
-var editingId = null;
-var tempImageData = "";
+let editingId = null;
+let tempImageData = "";
 
 function openAddModal() {
   editingId = null;
@@ -478,8 +467,8 @@ function openAddModal() {
 }
 
 function openEditModal(id) {
-  var products = loadProducts();
-  var p = products.find(function(x){ return x.id === id; });
+  const products = loadProducts();
+  const p = products.find(function(x){ return x.id === id; });
   if (!p) return;
   editingId = id;
   tempImageData = p.img || "";
@@ -505,10 +494,10 @@ function closeModal() {
 }
 
 function handleImageUpload(e) {
-  var file = e.target.files[0];
+  const file = e.target.files[0];
   if (!file) return;
   if (file.size > 500 * 1024) { showToast("图片不能超过500KB"); return; }
-  var reader = new FileReader();
+  const reader = new FileReader();
   reader.onload = function(ev) {
     tempImageData = ev.target.result;
     showPreview(tempImageData);
@@ -517,15 +506,15 @@ function handleImageUpload(e) {
 }
 
 function previewUrl() {
-  var url = document.getElementById("editImgUrl").value.trim();
+  const url = document.getElementById("editImgUrl").value.trim();
   if (url) { tempImageData = url; showPreview(url); }
 }
 
 function showPreview(data) {
-  var preview = document.getElementById("imgPreview");
+  const preview = document.getElementById("imgPreview");
   if (data) {
     preview.style.display = "flex";
-    preview.innerHTML = '<img src="' + data + '" alt="预览">';
+    preview.innerHTML = `<img src="${data}" alt="预览">`;
   } else {
     preview.style.display = "none";
     preview.innerHTML = "";
@@ -533,24 +522,24 @@ function showPreview(data) {
 }
 
 function saveProduct() {
-  var name = document.getElementById("editName").value.trim();
-  var cat = document.getElementById("editCat").value;
-  var price = parseFloat(document.getElementById("editPrice").value);
-  var unit = document.getElementById("editUnit").value.trim();
-  var desc = document.getElementById("editDesc").value.trim();
-  var tag = document.getElementById("editTag").value.trim();
-  var sort = parseInt(document.getElementById("editSort").value) || 0;
-  var imgUrl = document.getElementById("editImgUrl").value.trim();
-  var img = tempImageData || imgUrl;
+  const name = document.getElementById("editName").value.trim();
+  const cat = document.getElementById("editCat").value;
+  const price = parseFloat(document.getElementById("editPrice").value);
+  const unit = document.getElementById("editUnit").value.trim();
+  const desc = document.getElementById("editDesc").value.trim();
+  const tag = document.getElementById("editTag").value.trim();
+  const sort = parseInt(document.getElementById("editSort").value) || 0;
+  const imgUrl = document.getElementById("editImgUrl").value.trim();
+  const img = tempImageData || imgUrl;
 
   if (!name) { showToast("请输入商品名称"); return; }
   if (!price || price <= 0) { showToast("请输入有效价格"); return; }
   if (!unit) { showToast("请输入单位"); return; }
 
-  var products = loadProducts();
+  const products = loadProducts();
 
   if (editingId) {
-    var idx = products.findIndex(function(p){ return p.id === editingId; });
+    const idx = products.findIndex(function(p){ return p.id === editingId; });
     if (idx >= 0) {
       products[idx].name = name;
       products[idx].cat = cat;
@@ -577,7 +566,7 @@ function saveProduct() {
 
 function deleteProduct(id) {
   if (!confirm("确定删除这个商品吗？")) return;
-  var products = loadProducts().filter(function(p){ return p.id !== id; });
+  const products = loadProducts().filter(function(p){ return p.id !== id; });
   saveProducts(products);
   setTimeout(function(){ try { renderTable(); } catch(e){} }, 100);
   showToast("商品已删除");
@@ -585,13 +574,13 @@ function deleteProduct(id) {
 
 // ============ DATA IMPORT/EXPORT ============
 function exportData() {
-  var data = {
+  const data = {
     products: loadProducts(),
     settings: JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}"),
     exportedAt: new Date().toISOString()
   };
-  var blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
-  var a = document.createElement("a");
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "seafood-shop-backup-" + new Date().toISOString().slice(0,10) + ".json";
   a.click();
@@ -599,12 +588,12 @@ function exportData() {
 }
 
 function importData(e) {
-  var file = e.target.files[0];
+  const file = e.target.files[0];
   if (!file) return;
-  var reader = new FileReader();
+  const reader = new FileReader();
   reader.onload = function(ev) {
     try {
-      var data = JSON.parse(ev.target.result);
+      const data = JSON.parse(ev.target.result);
       if (data.products && Array.isArray(data.products)) {
         saveProducts(data.products);
         if (data.settings) localStorage.setItem(SETTINGS_KEY, JSON.stringify(data.settings));
@@ -632,7 +621,7 @@ function resetToDefault() {
 // ============ SETTINGS ============
 function loadSettings() {
   try {
-    var s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
+    const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
     document.getElementById("settingName").value = s.name || "朱家尖海鲜配送";
     document.getElementById("settingPhone").value = s.phone || "";
     document.getElementById("settingArea").value = s.area || "";
@@ -640,7 +629,7 @@ function loadSettings() {
 }
 
 function saveSettings() {
-  var s = {
+  const s = {
     name: document.getElementById("settingName").value.trim(),
     phone: document.getElementById("settingPhone").value.trim(),
     area: document.getElementById("settingArea").value.trim()
@@ -649,9 +638,8 @@ function saveSettings() {
 }
 
 // ============ SIDEBAR NAV ============
-var sidebarLinks = document.querySelectorAll(".sidebar a[data-page]");
-for (var si = 0; si < sidebarLinks.length; si++) {
-  sidebarLinks[si].addEventListener("click", function(e) {
+document.querySelectorAll(".sidebar a[data-page]").forEach(function(a) {
+  a.addEventListener("click", function(e) {
     e.preventDefault();
     var el = e.target;
     while (el && el !== this) {
@@ -659,11 +647,9 @@ for (var si = 0; si < sidebarLinks.length; si++) {
       el = el.parentNode;
     }
     if (!el || !el.hasAttribute("data-page")) return;
-    var allLinks = document.querySelectorAll(".sidebar a[data-page]");
-    for (var ai = 0; ai < allLinks.length; ai++) { allLinks[ai].classList.remove("active"); }
+    document.querySelectorAll(".sidebar a[data-page]").forEach(function(x){ x.classList.remove("active"); });
     el.classList.add("active");
-    var allPages = document.querySelectorAll("#mainContent > div");
-    for (var pi = 0; pi < allPages.length; pi++) { allPages[pi].style.display = "none"; }
+    document.querySelectorAll("#mainContent > div").forEach(function(d){ d.style.display = "none"; });
     var pageId = "page-" + el.getAttribute("data-page");
     var pageEl = document.getElementById(pageId);
     if (pageEl) pageEl.style.display = "block";
@@ -671,25 +657,25 @@ for (var si = 0; si < sidebarLinks.length; si++) {
     if (el.getAttribute("data-page") === "orders") renderOrders();
     if (el.getAttribute("data-page") === "settings") loadSettings();
   });
-}
+});
 
 // ============ ORDERS ============
-var ORDERS_KEY_ADMIN = "seafood_shop_orders";
+const ORDERS_KEY_ADMIN = "seafood_shop_orders";
 function loadOrders() { try { var r = null; try { r = localStorage.getItem("seafood_shop_orders"); } catch(e) {} return r ? JSON.parse(r) : []; } catch(e) { return []; } }
 function saveOrders(o) { try { localStorage.setItem("seafood_shop_orders", JSON.stringify(o)); } catch(e) {} }
 function renderOrders() {
-  var orders = loadOrders();
-  var sfEl = document.getElementById("orderStatusFilter"); var sf = sfEl ? sfEl.value : "all";
-  var pfEl = document.getElementById("orderPaidFilter"); var pf = pfEl ? pfEl.value : "all";
+  let orders = loadOrders();
+  const sf = document.getElementById("orderStatusFilter").value;
+  const pf = document.getElementById("orderPaidFilter").value;
   if (sf !== "all") orders = orders.filter(function(o){ return o.status === sf; });
   if (pf === "paid") orders = orders.filter(function(o){ return o.paid; });
   if (pf === "unpaid") orders = orders.filter(function(o){ return !o.paid; });
-  var tbody = document.getElementById("orderTableBody");
-  var empty = document.getElementById("orderEmpty");
+  const tbody = document.getElementById("orderTableBody");
+  const empty = document.getElementById("orderEmpty");
   if (orders.length === 0) { if(tbody) tbody.innerHTML = ""; if(empty) empty.style.display = "block"; document.getElementById("statPending").textContent = "0"; document.getElementById("statPreparing").textContent = "0"; document.getElementById("statDelivering").textContent = "0"; document.getElementById("statDone").textContent = "0"; return; }
   empty.style.display = "none";
   tbody.innerHTML = orders.map(function(o,i){
-    var statusOpts = ["待确认","备货中","配送中","已完成","已取消"].map(function(s){ return "<option value='"+s+"'"+(o.status===s?" selected":"")+">"+s+"</option>").join("");
+    const statusOpts = ["待确认","备货中","配送中","已完成","已取消"].map(function(s){ return "<option value='"+s+"'"+(o.status===s?" selected":"")+">"+s+"</option>").join("");
     return "<tr>" +
       "<td style='font-size:12px;font-family:monospace;'>"+o.orderNo+"</td>" +
       "<td><div style='font-weight:500;'>"+o.name+"</div><div style='font-size:12px;color:#888;'>"+o.phone+"</div>"+(o.plate && o.plate!=="未提供"?"<div style='font-size:12px;color:#0a7cbf;'>🚗 "+o.plate+"</div>":"")+"</td>" +
@@ -702,46 +688,43 @@ function renderOrders() {
       "<td>"+(!o.paid?"<button class='btn btn-success btn-sm' onclick='markPaid("+i+")'>✓ 标记付款</button> ":"")+"<button class='btn btn-danger btn-sm' onclick='deleteOrder("+i+")'>🗑</button></td>" +
       "</tr>";
   }).join("");
-  var all = loadOrders();
+  const all = loadOrders();
   document.getElementById("statPending").textContent = all.filter(function(o){return o.status==="待确认"}).length;
   document.getElementById("statPreparing").textContent = all.filter(function(o){return o.status==="备货中"}).length;
   document.getElementById("statDelivering").textContent = all.filter(function(o){return o.status==="配送中"}).length;
   document.getElementById("statDone").textContent = all.filter(function(o){return o.status==="已完成"}).length;
 }
-}
-
-
-function updateOrderStatus(idx,status) { var o=loadOrders(); o[idx].status=status; saveOrders(o); renderOrders(); showToast("状态已更新："+status); }
-function markPaid(idx) { var o=loadOrders(); o[idx].paid=true; saveOrders(o); renderOrders(); showToast("已标记为已付款"); }
-function deleteOrder(idx) { if(!confirm("确定删除？"))return; var o=loadOrders(); o.splice(idx,1); saveOrders(o); renderOrders(); showToast("订单已删除"); }
+function updateOrderStatus(idx,status) { const o=loadOrders(); o[idx].status=status; saveOrders(o); renderOrders(); showToast("状态已更新："+status); }
+function markPaid(idx) { const o=loadOrders(); o[idx].paid=true; saveOrders(o); renderOrders(); showToast("已标记为已付款"); }
+function deleteOrder(idx) { if(!confirm("确定删除？"))return; const o=loadOrders(); o.splice(idx,1); saveOrders(o); renderOrders(); showToast("订单已删除"); }
 function clearOrders() { if(!confirm("确定清空所有订单？"))return; localStorage.removeItem("seafood_shop_orders"); renderOrders(); showToast("订单已清空"); }
-function exportOrders() { var o=loadOrders(); var b=new Blob([JSON.stringify(o,null,2)],{type:"application/json"}); var a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="orders-"+new Date().toISOString().slice(0,10)+".json"; a.click(); showToast("订单已导出"); }
+function exportOrders() { const o=loadOrders(); const b=new Blob([JSON.stringify(o,null,2)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="orders-"+new Date().toISOString().slice(0,10)+".json"; a.click(); showToast("订单已导出"); }
 
 // ============ PAYMENT QR ============
 function handlePayQrUpload(e) {
-  var f=e.target.files[0]; if(!f)return; if(f.size>500*1024){showToast("图片不能超过500KB");return;}
-  var r=new FileReader(); r.onload=function(ev){
+  const f=e.target.files[0]; if(!f)return; if(f.size>500*1024){showToast("图片不能超过500KB");return;}
+  const r=new FileReader(); r.onload=function(ev){
     document.getElementById("payQrPreview").style.display="flex";
     document.getElementById("payQrPreview").innerHTML="<img src='"+ev.target.result+"' style='width:100%;height:100%;object-fit:contain;'>";
     document.getElementById("payQrIcon").style.display="none";
-    var s=JSON.parse(localStorage.getItem("seafood_shop_settings")||"{}"); s.payQr=ev.target.result;
+    const s=JSON.parse(localStorage.getItem("seafood_shop_settings")||"{}"); s.payQr=ev.target.result;
     try { localStorage.setItem("seafood_shop_settings",JSON.stringify(s)); } catch(e) {} showToast("收款码已保存");
   }; r.readAsDataURL(f);
 }
-var origLoadSettings = loadSettings;
+const origLoadSettings = loadSettings;
 loadSettings = function() {
   try {
-    var s=JSON.parse(localStorage.getItem("seafood_shop_settings")||"{}");
+    const s=JSON.parse(localStorage.getItem("seafood_shop_settings")||"{}");
     document.getElementById("settingName").value=s.name||"朱家尖海鲜配送";
     document.getElementById("settingPhone").value=s.phone||"";
     document.getElementById("settingArea").value=s.area||"";
-    var preview=document.getElementById("payQrPreview"), icon=document.getElementById("payQrIcon");
+    const preview=document.getElementById("payQrPreview"), icon=document.getElementById("payQrIcon");
     if(s.payQr){ preview.style.display="flex"; preview.innerHTML="<img src='"+s.payQr+"' style='width:100%;height:100%;object-fit:contain;'>"; icon.style.display="none"; }
   } catch(e){}
 };
-var origSaveSettings = saveSettings;
+const origSaveSettings = saveSettings;
 saveSettings = function() {
-  var s=JSON.parse(localStorage.getItem("seafood_shop_settings")||"{}");
+  const s=JSON.parse(localStorage.getItem("seafood_shop_settings")||"{}");
   s.name=document.getElementById("settingName").value.trim();
   s.phone=document.getElementById("settingPhone").value.trim();
   s.area=document.getElementById("settingArea").value.trim();
@@ -750,12 +733,19 @@ saveSettings = function() {
 
 // ============ TOAST ============
 function showToast(msg) {
-  var t = document.getElementById("toast");
+  const t = document.getElementById("toast");
   t.textContent = msg; t.classList.add("show");
   clearTimeout(t._timeout);
   t._timeout = setTimeout(function() { t.classList.remove("show"); }, 2000);
 }
-/ ============ 
+
+// ============ LOGIN CHECK (moved to top) ============ else {
+    var err = document.getElementById("adminGateError");
+    if (err) err.style.display = "block";
+    var inp = document.getElementById("adminGatePwd");
+    if (inp) { inp.value = ""; inp.focus(); }
+  }
+}
 
 // ============ INIT ============
 setTimeout(function(){ try { renderTable(); } catch(e){} }, 100);
