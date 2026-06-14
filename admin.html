@@ -653,8 +653,8 @@ document.querySelectorAll(".sidebar a[data-page]").forEach(a => {
 
 // ============ ORDERS ============
 const "seafood_shop_orders" = "seafood_shop_orders";
-function loadOrders() { const r = localStorage.getItem("seafood_shop_orders"); return r ? JSON.parse(r) : []; }
-function saveOrders(o) { localStorage.setItem("seafood_shop_orders", JSON.stringify(o)); }
+function loadOrders() { try { var r = null; try { r = localStorage.getItem("seafood_shop_orders"); } catch(e) {} return r ? JSON.parse(r) : []; } catch(e) { return []; } }
+function saveOrders(o) { try { try { localStorage.setItem("seafood_shop_orders", JSON.stringify(o)); } catch(e) {} }
 function renderOrders() {
   let orders = loadOrders();
   const sf = document.getElementById("orderStatusFilter").value;
@@ -664,7 +664,7 @@ function renderOrders() {
   if (pf === "unpaid") orders = orders.filter(o => !o.paid);
   const tbody = document.getElementById("orderTableBody");
   const empty = document.getElementById("orderEmpty");
-  if (orders.length === 0) { tbody.innerHTML = ""; empty.style.display = "block"; return; }
+  if (orders.length === 0) { if(tbody) tbody.innerHTML = ""; if(empty) empty.style.display = "block"; document.getElementById("statPending").textContent = "0"; document.getElementById("statPreparing").textContent = "0"; document.getElementById("statDelivering").textContent = "0"; document.getElementById("statDone").textContent = "0"; return; }
   empty.style.display = "none";
   tbody.innerHTML = orders.map((o,i) => {
     const statusOpts = ["待确认","备货中","配送中","已完成","已取消"].map(s => "<option value='"+s+"'"+(o.status===s?" selected":"")+">"+s+"</option>").join("");
