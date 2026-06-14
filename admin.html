@@ -741,13 +741,8 @@ function showToast(msg) {
   t._timeout = setTimeout(function() { t.classList.remove("show"); }, 2000);
 }
 
-// ============ LOGIN CHECK (moved to top) ============ else {
-    var err = document.getElementById("adminGateError");
-    if (err) err.style.display = "block";
-    var inp = document.getElementById("adminGatePwd");
-    if (inp) { inp.value = ""; inp.focus(); }
-  }
-}
+
+// ============ LOGIN CHECK FIXED ============
 
 // ============ INIT ============
 setTimeout(function(){ try { renderTable(); } catch(e){} }, 100);
