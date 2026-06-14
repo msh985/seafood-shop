@@ -251,7 +251,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 <body>
 
 <div class="header">
-  <div class="header-top"><a href="javascript:showAdminLogin()" style="float:right;color:#fff;background:rgba(255,255,255,.2);padding:4px 12px;border-radius:14px;font-size:12px;text-decoration:none;margin-top:4px;">⚙ 管理</a>
+  <div class="header-top"><a href="#" onclick="showAdminLogin();return false;" style="float:right;color:#fff;background:rgba(255,255,255,.2);padding:4px 12px;border-radius:14px;font-size:12px;text-decoration:none;margin-top:4px;">⚙ 管理</a>
     <div>
       <h1>🦐 朱家尖海鲜配送</h1>
       <div class="header-sub">扫码下单 · 配送到车 · 新鲜保证</div>
@@ -398,8 +398,8 @@ const productImages = {
 // Load products from localStorage (synced with admin panel)
 const STORAGE_KEY = "seafood_shop_products";
 function loadShopProducts() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (raw) { try { const data = JSON.parse(raw); if (data.length > 0) return data; } catch(e) {} }
+  try { var raw = localStorage.getItem(STORAGE_KEY); } catch(e) { return defaultProducts; }
+  if (raw) { try { var data = JSON.parse(raw); if (data.length > 0) return data; } catch(e) {} }
   return defaultProducts;
 }
 const defaultProducts = [
@@ -421,15 +421,15 @@ const defaultProducts = [
   { id:16, name:"豪华海鲜礼盒", cat:"gift", imgKey:"礼盒", desc:"黄鱼+梭子蟹+带鱼+鲳鱼+虾皮", price:388, unit:"套", tag:"高端" }
 ];
 
+];
 
-
-let products = loadShopProducts();
+let products; try { products = loadShopProducts(); } catch(e) { console.warn("localStorage error, using defaults"); products = defaultProducts; }
 let cart = [];
 let currentCat = "all";
 
 // Refresh products from localStorage (call after admin changes)
 function refreshProducts() { products = loadShopProducts(); renderProducts(); }
-window.addEventListener("storage", function(e) { if (e.key === STORAGE_KEY) { refreshProducts(); } });
+try { window.addEventListener('storage', function(e) { if (e.key === STORAGE_KEY) { refreshProducts(); } }); } catch(e) {}
 
 function renderProducts() {
   const list = document.getElementById("productList");
@@ -496,12 +496,10 @@ function addToCart(id) {
   if (existing) { existing.qty++; }
   else { cart.push({ id:p.id, name:p.name, imgKey:p.imgKey, img:p.img, price:p.price, unit:p.unit, qty:1 }); }
   renderCart();
-// Robust admin toggle listener
 (function(){
-  var btn = document.querySelector(".admin-toggle");
-  if(btn) { btn.addEventListener("click", function(e){ e.preventDefault(); showAdminLogin(); }); }
-  // Also support URL hash
-  if(location.hash==="#admin"){ showAdminLogin(); }
+  var btn=document.querySelector('.admin-toggle');
+  if(btn)btn.addEventListener('click',function(e){e.preventDefault();showAdminLogin();});
+  if(location.hash==='#admin')showAdminLogin();
 })();
   showToast(`已加入：${p.name}`);
 }
@@ -510,34 +508,28 @@ function changeQty(idx, delta) {
   cart[idx].qty += delta;
   if (cart[idx].qty <= 0) { cart.splice(idx,1); }
   renderCart();
-// Robust admin toggle listener
 (function(){
-  var btn = document.querySelector(".admin-toggle");
-  if(btn) { btn.addEventListener("click", function(e){ e.preventDefault(); showAdminLogin(); }); }
-  // Also support URL hash
-  if(location.hash==="#admin"){ showAdminLogin(); }
+  var btn=document.querySelector('.admin-toggle');
+  if(btn)btn.addEventListener('click',function(e){e.preventDefault();showAdminLogin();});
+  if(location.hash==='#admin')showAdminLogin();
 })();
 }
 
 function clearCart() { cart=[]; renderCart();
-// Robust admin toggle listener
 (function(){
-  var btn = document.querySelector(".admin-toggle");
-  if(btn) { btn.addEventListener("click", function(e){ e.preventDefault(); showAdminLogin(); }); }
-  // Also support URL hash
-  if(location.hash==="#admin"){ showAdminLogin(); }
+  var btn=document.querySelector('.admin-toggle');
+  if(btn)btn.addEventListener('click',function(e){e.preventDefault();showAdminLogin();});
+  if(location.hash==='#admin')showAdminLogin();
 })(); showToast("购物车已清空"); }
 
 function toggleCart() {
   document.getElementById("cartPanel").classList.toggle("show");
   document.getElementById("overlay").classList.toggle("show");
   renderCart();
-// Robust admin toggle listener
 (function(){
-  var btn = document.querySelector(".admin-toggle");
-  if(btn) { btn.addEventListener("click", function(e){ e.preventDefault(); showAdminLogin(); }); }
-  // Also support URL hash
-  if(location.hash==="#admin"){ showAdminLogin(); }
+  var btn=document.querySelector('.admin-toggle');
+  if(btn)btn.addEventListener('click',function(e){e.preventDefault();showAdminLogin();});
+  if(location.hash==='#admin')showAdminLogin();
 })();
 }
 
@@ -584,12 +576,10 @@ function submitOrder() {
     : '<div style="margin-top:16px;background:#fffbe6;padding:12px;border-radius:8px;text-align:center;font-size:14px;">💰 支持<strong>货到付款</strong>，配送员会当面收款</div>';
   document.getElementById("orderNoDisplay").textContent = "订单号：" + orderNo;
   cart = []; renderCart();
-// Robust admin toggle listener
 (function(){
-  var btn = document.querySelector(".admin-toggle");
-  if(btn) { btn.addEventListener("click", function(e){ e.preventDefault(); showAdminLogin(); }); }
-  // Also support URL hash
-  if(location.hash==="#admin"){ showAdminLogin(); }
+  var btn=document.querySelector('.admin-toggle');
+  if(btn)btn.addEventListener('click',function(e){e.preventDefault();showAdminLogin();});
+  if(location.hash==='#admin')showAdminLogin();
 })();
   document.getElementById("inputName").value = "";
   document.getElementById("inputPhone").value = "";
@@ -930,14 +920,11 @@ function handleAdminPayQr(e) {
   };
   r.readAsDataURL(f);
 }
-renderProducts();
-renderCart();
-// Robust admin toggle listener
+try { renderProducts(); } catch(e) { console.warn(e); } try { renderCart(); } catch(e) { console.warn(e); }
 (function(){
-  var btn = document.querySelector(".admin-toggle");
-  if(btn) { btn.addEventListener("click", function(e){ e.preventDefault(); showAdminLogin(); }); }
-  // Also support URL hash
-  if(location.hash==="#admin"){ showAdminLogin(); }
+  var btn=document.querySelector('.admin-toggle');
+  if(btn)btn.addEventListener('click',function(e){e.preventDefault();showAdminLogin();});
+  if(location.hash==='#admin')showAdminLogin();
 })();
 </script>
 <!-- Admin toggle -->
