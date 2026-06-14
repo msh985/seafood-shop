@@ -362,7 +362,7 @@ const defaultProducts = [
 ];
 
 function loadProducts() {
-  const raw = localStorage.getItem(STORAGE_KEY);
+  const raw = safeGet(STORAGE_KEY);
   if (raw) {
     try { return JSON.parse(raw); } catch(e) {}
   }
@@ -553,14 +553,14 @@ function saveProduct() {
 
   saveProducts(products);
   closeModal();
-  renderTable();
+  try { if(!document.getElementById("adminLoginGate") || document.getElementById("adminLoginGate").style.display==="none") { renderTable(); } } catch(e) { console.warn(e); }
 }
 
 function deleteProduct(id) {
   if (!confirm("确定删除这个商品吗？")) return;
   const products = loadProducts().filter(p => p.id !== id);
   saveProducts(products);
-  renderTable();
+  try { if(!document.getElementById("adminLoginGate") || document.getElementById("adminLoginGate").style.display==="none") { renderTable(); } } catch(e) { console.warn(e); }
   showToast("商品已删除");
 }
 
@@ -589,7 +589,7 @@ function importData(e) {
       if (data.products && Array.isArray(data.products)) {
         saveProducts(data.products);
         if (data.settings) localStorage.setItem(SETTINGS_KEY, JSON.stringify(data.settings));
-        renderTable();
+        try { if(!document.getElementById("adminLoginGate") || document.getElementById("adminLoginGate").style.display==="none") { renderTable(); } } catch(e) { console.warn(e); }
         loadSettings();
         showToast("导入成功！共 " + data.products.length + " 件商品");
       } else {
@@ -606,7 +606,7 @@ function importData(e) {
 function resetToDefault() {
   if (!confirm("确定恢复为默认商品列表吗？当前修改将丢失！")) return;
   saveProducts(JSON.parse(JSON.stringify(defaultProducts)));
-  renderTable();
+  try { if(!document.getElementById("adminLoginGate") || document.getElementById("adminLoginGate").style.display==="none") { renderTable(); } } catch(e) { console.warn(e); }
   showToast("已恢复默认");
 }
 
@@ -723,7 +723,7 @@ function showToast(msg) {
 }
 
 // ============ INIT ============
-renderTable();
+try { if(!document.getElementById("adminLoginGate") || document.getElementById("adminLoginGate").style.display==="none") { renderTable(); } } catch(e) { console.warn(e); }
 </script>
 </body>
 </html>
