@@ -323,7 +323,7 @@ try { window.addEventListener('storage', function(e) { if (e.key === STORAGE_KEY
 function renderProducts() {
   const list = document.getElementById("productList");
   const filtered = (currentCat === "all" ? products : products.filter(p => p.cat === currentCat)).filter(p => p.published !== false);
-  list.innerHTML = filtered.map(p => `
+  list.innerHTML = filtered.map(function(p){ return `
     <div class="product-card">
       <div class="product-img" onclick="addToCart(${p.id})">
         ${p.img ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;" alt="${p.name}">` : "🐟"}
@@ -349,7 +349,7 @@ function renderCart() {
   if (cart.length === 0) {
     container.innerHTML = '<div class="cart-empty">🛒<p>购物车是空的</p></div>';
   } else {
-    container.innerHTML = cart.map((item,idx) => `
+    container.innerHTML = cart.map(function(item,idx){ return `
       <div class="cart-item">
         <div class="cart-item-img">${item.img ? `<img src="${item.img}" style="width:100%;height:100%;object-fit:cover;" alt="${item.name}">` : "🐟"}</div>
         <div class="cart-item-info">
@@ -369,7 +369,7 @@ function renderCart() {
 
 function updateTotals() {
   const count = cart.reduce((s,i) => s + i.qty, 0);
-  const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
+  const total = cart.reduce(function(s,i){ return s + i.price * i.qty; }, 0);
   document.getElementById("cartTotal").textContent = "¥" + total;
   document.getElementById("footerTotal").textContent = "¥" + total;
   document.getElementById("footerCount").textContent = count > 0 ? `共${count}件商品` : "未选商品";
@@ -410,8 +410,8 @@ function openOrderForm() {
   if (cart.length === 0) { showToast("请先选择商品"); return; }
   document.getElementById("cartPanel").classList.remove("show");
   document.getElementById("overlay").classList.remove("show");
-  const summary = cart.map(i => `<div class="row"><span>${i.name} ×${i.qty}</span><span>¥${i.price * i.qty}</span></div>`).join("");
-  const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
+  const summary = cart.map(function(i){ return `<div class="row"><span>${i.name} ×${i.qty}</span><span>¥${i.price * i.qty}</span></div>`).join("");
+  const total = cart.reduce(function(s,i){ return s + i.price * i.qty; }, 0);
   document.getElementById("orderSummary").innerHTML = summary + `<div class="row total"><span>合计</span><span>¥${total}</span></div>`;
   document.getElementById("orderModal").classList.add("show");
   document.getElementById("orderFormEl").style.display = "block";
@@ -432,8 +432,8 @@ function submitOrder() {
   if (!phone || !/^1\d{10}$/.test(phone)) { showToast("请填写正确的手机号码"); return; }
   if (!location) { showToast("请选择配送位置"); return; }
   const orderNo = "ZS" + Date.now().toString(36).toUpperCase();
-  const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
-  const order = { orderNo, name, phone, plate: plate || "未提供", location, note, total, items: cart.map(i => ({ name:i.name, qty:i.qty, price:i.price })), time: new Date().toLocaleString() };
+  const total = cart.reduce(function(s,i){ return s + i.price * i.qty; }, 0);
+  const order = { orderNo, name, phone, plate: plate || "未提供", location, note, total, items: cart.map(function(i){ return { name:i.name, qty:i.qty, price:i.price }; }), time: new Date().toLocaleString() };
     // Save to localStorage for admin panel
   const orders = JSON.parse((function(){try{return localStorage.getItem(ORDERS_KEY)}catch(e){return null}})() || "[]");
   orders.unshift(Object.assign({}, order, {status:"待确认", paid:false}));
@@ -507,7 +507,7 @@ function lookupOrders() {
         '<span style="font-size:11px;color:#999;">'+o.orderNo+'</span>' +
         '<span class="status-badge" style="background:'+sc+'20;color:'+sc+';">'+o.status+'</span>' +
       '</div>' +
-      '<div style="margin-bottom:4px;">'+o.items.map(x=>x.name+'×'+x.qty).join(' | ')+'</div>' +
+      '<div style="margin-bottom:4px;">'+o.items.map(function(x){ return x.name+'×'+x.qty; }).join(' | ')+'</div>' +
       '<div style="display:flex;justify-content:space-between;">' +
         '<span style="color:#999;font-size:12px;">'+o.location+'</span>' +
         '<span style="font-weight:600;color:#ff4444;">¥'+o.total+' '+(o.paid?'<span style="color:#28a745;font-size:11px;">已付</span>':'<span style="color:#ff6b35;font-size:11px;">未付</span>')+'</span>' +
