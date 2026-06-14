@@ -362,7 +362,7 @@ const defaultProducts = [
 ];
 
 function loadProducts() {
-  const raw = safeGet(STORAGE_KEY);
+  const raw = (function(){try{return localStorage.getItem(STORAGE_KEY)}catch(e){return null}})();
   if (raw) {
     try { return JSON.parse(raw); } catch(e) {}
   }
@@ -553,14 +553,14 @@ function saveProduct() {
 
   saveProducts(products);
   closeModal();
-  try { if(!document.getElementById("adminLoginGate") || document.getElementById("adminLoginGate").style.display==="none") { renderTable(); } } catch(e) { console.warn(e); }
+  setTimeout(function(){ try { renderTable(); } catch(e){} }, 100);
 }
 
 function deleteProduct(id) {
   if (!confirm("确定删除这个商品吗？")) return;
   const products = loadProducts().filter(p => p.id !== id);
   saveProducts(products);
-  try { if(!document.getElementById("adminLoginGate") || document.getElementById("adminLoginGate").style.display==="none") { renderTable(); } } catch(e) { console.warn(e); }
+  setTimeout(function(){ try { renderTable(); } catch(e){} }, 100);
   showToast("商品已删除");
 }
 
@@ -589,7 +589,7 @@ function importData(e) {
       if (data.products && Array.isArray(data.products)) {
         saveProducts(data.products);
         if (data.settings) localStorage.setItem(SETTINGS_KEY, JSON.stringify(data.settings));
-        try { if(!document.getElementById("adminLoginGate") || document.getElementById("adminLoginGate").style.display==="none") { renderTable(); } } catch(e) { console.warn(e); }
+        setTimeout(function(){ try { renderTable(); } catch(e){} }, 100);
         loadSettings();
         showToast("导入成功！共 " + data.products.length + " 件商品");
       } else {
@@ -606,7 +606,7 @@ function importData(e) {
 function resetToDefault() {
   if (!confirm("确定恢复为默认商品列表吗？当前修改将丢失！")) return;
   saveProducts(JSON.parse(JSON.stringify(defaultProducts)));
-  try { if(!document.getElementById("adminLoginGate") || document.getElementById("adminLoginGate").style.display==="none") { renderTable(); } } catch(e) { console.warn(e); }
+  setTimeout(function(){ try { renderTable(); } catch(e){} }, 100);
   showToast("已恢复默认");
 }
 
@@ -691,7 +691,7 @@ function handlePayQrUpload(e) {
     document.getElementById("payQrPreview").innerHTML="<img src='"+ev.target.result+"' style='width:100%;height:100%;object-fit:contain;'>";
     document.getElementById("payQrIcon").style.display="none";
     const s=JSON.parse(localStorage.getItem("seafood_shop_settings")||"{}"); s.payQr=ev.target.result;
-    localStorage.setItem("seafood_shop_settings",JSON.stringify(s)); showToast("收款码已保存");
+    try { localStorage.setItem("seafood_shop_settings",JSON.stringify(s)); } catch(e) {} showToast("收款码已保存");
   }; r.readAsDataURL(f);
 }
 const origLoadSettings = loadSettings;
@@ -711,7 +711,7 @@ saveSettings = function() {
   s.name=document.getElementById("settingName").value.trim();
   s.phone=document.getElementById("settingPhone").value.trim();
   s.area=document.getElementById("settingArea").value.trim();
-  localStorage.setItem("seafood_shop_settings",JSON.stringify(s));
+  try { localStorage.setItem("seafood_shop_settings",JSON.stringify(s)); } catch(e) {}
 };
 
 // ============ TOAST ============
@@ -723,7 +723,7 @@ function showToast(msg) {
 }
 
 // ============ INIT ============
-try { if(!document.getElementById("adminLoginGate") || document.getElementById("adminLoginGate").style.display==="none") { renderTable(); } } catch(e) { console.warn(e); }
+setTimeout(function(){ try { renderTable(); } catch(e){} }, 100);
 </script>
 </body>
 </html>
