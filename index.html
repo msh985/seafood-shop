@@ -465,7 +465,7 @@ function resetShop() {
 
 document.getElementById("catTabs").addEventListener("click", function(e) {
   if (e.target.classList.contains("cat-tab")) {
-    document.querySelectorAll(".cat-tab").forEach(function(t){ t.classList.remove("active"); });
+    var tabs = document.querySelectorAll(".cat-tab"); for (var ti = 0; ti < tabs.length; ti++) { tabs[ti].classList.remove("active"); }
     e.target.classList.add("active");
     currentCat = e.target.dataset.cat;
     renderProducts();
