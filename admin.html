@@ -642,9 +642,22 @@ function saveSettings() {
 document.querySelectorAll(".sidebar a[data-page]").forEach(a => {
   a.addEventListener("click", function(e) {
     e.preventDefault();
-    var link = e.target.closest("a[data-page]");
-    if (!link) return;
+    var el = e.target;
+    while (el && el !== this) {
+      if (el.hasAttribute("data-page")) break;
+      el = el.parentNode;
+    }
+    if (!el || !el.hasAttribute("data-page")) return;
     document.querySelectorAll(".sidebar a[data-page]").forEach(function(x){ x.classList.remove("active"); });
+    el.classList.add("active");
+    document.querySelectorAll("#mainContent > div").forEach(function(d){ d.style.display = "none"; });
+    var pageId = "page-" + el.getAttribute("data-page");
+    var pageEl = document.getElementById(pageId);
+    if (pageEl) pageEl.style.display = "block";
+    if (el.getAttribute("data-page") === "products") renderTable();
+    if (el.getAttribute("data-page") === "orders") renderOrders();
+    if (el.getAttribute("data-page") === "settings") loadSettings();
+  });
     link.classList.add("active");
     document.querySelectorAll("#mainContent > div").forEach(function(d){ d.style.display = "none"; });
     var pageId = "page-" + link.dataset.page;
