@@ -127,19 +127,7 @@ tr:hover td { background:#fafcfd; }
   </div>
 </div>
 
-<script>
-function getAdminPwd() { try { return localStorage.getItem("seafood_admin_pwd") || "mashihong199856"; } catch(e) { return "mashihong199856"; } }
-function checkAdminGate() {
-  var pwd = document.getElementById("adminGatePwd").value;
-  if (pwd === getAdminPwd()) {
-    document.getElementById("adminLoginGate").style.display = "none";
-  } else {
-    document.getElementById("adminGateError").style.display = "block";
-    document.getElementById("adminGatePwd").value = "";
-    document.getElementById("adminGatePwd").focus();
-  }
-}
-</script>
+
 
 
 <div class="layout">
@@ -720,6 +708,23 @@ function showToast(msg) {
   t.textContent = msg; t.classList.add("show");
   clearTimeout(t._timeout);
   t._timeout = setTimeout(() => t.classList.remove("show"), 2000);
+}
+
+// ============ LOGIN CHECK ============
+function getAdminPwd() { try { return localStorage.getItem("seafood_admin_pwd") || "mashihong199856"; } catch(e) { return "mashihong199856"; } }
+function checkAdminGate() {
+  var pwd = document.getElementById("adminGatePwd");
+  if (!pwd) return;
+  pwd = pwd.value;
+  if (pwd === getAdminPwd()) {
+    var gate = document.getElementById("adminLoginGate");
+    if (gate) gate.style.display = "none";
+  } else {
+    var err = document.getElementById("adminGateError");
+    if (err) err.style.display = "block";
+    var inp = document.getElementById("adminGatePwd");
+    if (inp) { inp.value = ""; inp.focus(); }
+  }
 }
 
 // ============ INIT ============
