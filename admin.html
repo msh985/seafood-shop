@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -114,6 +114,33 @@ tr:hover td { background:#fafcfd; }
 </style>
 </head>
 <body>
+
+<!-- Admin Login Gate -->
+<div id="adminLoginGate" style="position:fixed;top:0;left:0;right:0;bottom:0;background:#1a1a2e;z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:40px 32px;text-align:center;width:90%;max-width:360px;box-shadow:0 8px 40px rgba(0,0,0,.3);">
+    <div style="font-size:48px;margin-bottom:12px;">🔐</div>
+    <h2 style="color:#1a1a2e;margin-bottom:6px;font-size:20px;">后台管理</h2>
+    <p style="color:#999;font-size:13px;margin-bottom:20px;">请输入管理密码</p>
+    <input type="password" id="adminGatePwd" placeholder="输入密码" style="width:100%;padding:12px 16px;border:1px solid #ddd;border-radius:10px;font-size:15px;text-align:center;outline:none;margin-bottom:12px;" onkeydown="if(event.key==='Enter')checkAdminGate()">
+    <button onclick="checkAdminGate()" style="width:100%;padding:12px;background:#0a7cbf;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">进入管理</button>
+    <p id="adminGateError" style="color:#ff4444;font-size:12px;margin-top:8px;display:none;">密码错误，请重试</p>
+  </div>
+</div>
+
+<script>
+function getAdminPwd() { try { return localStorage.getItem("seafood_admin_pwd") || "admin123"; } catch(e) { return "admin123"; } }
+function checkAdminGate() {
+  var pwd = document.getElementById("adminGatePwd").value;
+  if (pwd === getAdminPwd()) {
+    document.getElementById("adminLoginGate").style.display = "none";
+  } else {
+    document.getElementById("adminGateError").style.display = "block";
+    document.getElementById("adminGatePwd").value = "";
+    document.getElementById("adminGatePwd").focus();
+  }
+}
+</script>
+
 
 <div class="layout">
   <!-- Sidebar -->
