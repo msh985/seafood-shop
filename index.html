@@ -323,8 +323,6 @@ try { window.addEventListener('storage', function(e) { if (e.key === STORAGE_KEY
 function renderProducts() {
   var list = document.getElementById("productList");
   var filtered = (currentCat === "all" ? products : products.filter(function(p){ return p.cat === currentCat; })).filter(function(p){ return p.published !== false; });
-    var list = document.getElementById("productList");
-  var filtered = (currentCat === "all" ? products : products.filter(function(p){ return p.cat === currentCat; })).filter(function(p){ return p.published !== false; });
   list.innerHTML = filtered.map(function(p){
     var imgHtml = p.img ? '<img src="'+p.img+'" style="width:100%;height:100%;object-fit:cover;" alt="'+p.name+'">' : "🐟";
     var tagHtml = p.tag ? '<span class="product-tag">'+p.tag+'</span>' : "";

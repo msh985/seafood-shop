@@ -138,7 +138,7 @@ window.onerror = function(msg, url, line) {
 document.getElementById("adminGateBtn").onclick = function() {
   var i = document.getElementById("adminGatePwd");
   var g = document.getElementById("adminLoginGate");
-  if (i.value === "mashihong199856") { g.style.display = "none"; }
+  if (i.value === "mashihong199856") { g.style.display = "none"; try { sessionStorage.setItem('admin_logged_in','1'); } catch(e){} }
   else { i.value = ""; document.getElementById("adminGateError").style.display = "block"; }
 };
 document.getElementById("adminGatePwd").onkeydown = function(e) {
@@ -402,7 +402,7 @@ var catCss = { ice:"cat-ice", live:"cat-live", dry:"cat-dry", gift:"cat-gift" };
 function renderTable() {
   var products = loadProducts();
   var search = (document.getElementById("searchInput").value || "").toLowerCase();
-  var filter = document.getElementById("filterCat").value;
+  var filterEl = document.getElementById("filterCat"); var filter = filterEl ? filterEl.value : "all";
 
   if (search) products = products.filter(function(p){ return p.name.toLowerCase().includes(search); });
   if (filter !== "all") products = products.filter(function(p){ return p.cat === filter; });
