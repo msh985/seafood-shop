@@ -640,9 +640,9 @@ document.querySelectorAll(".sidebar a[data-page]").forEach(a => {
 });
 
 // ============ ORDERS ============
-const ORDERS_KEY_ADMIN = "seafood_shop_orders";
-function loadOrders() { const r = localStorage.getItem(ORDERS_KEY_ADMIN); return r ? JSON.parse(r) : []; }
-function saveOrders(o) { localStorage.setItem(ORDERS_KEY_ADMIN, JSON.stringify(o)); }
+const "seafood_shop_orders" = "seafood_shop_orders";
+function loadOrders() { const r = localStorage.getItem("seafood_shop_orders"); return r ? JSON.parse(r) : []; }
+function saveOrders(o) { localStorage.setItem("seafood_shop_orders", JSON.stringify(o)); }
 function renderOrders() {
   let orders = loadOrders();
   const sf = document.getElementById("orderStatusFilter").value;
@@ -677,7 +677,7 @@ function renderOrders() {
 function updateOrderStatus(idx,status) { const o=loadOrders(); o[idx].status=status; saveOrders(o); renderOrders(); showToast("状态已更新："+status); }
 function markPaid(idx) { const o=loadOrders(); o[idx].paid=true; saveOrders(o); renderOrders(); showToast("已标记为已付款"); }
 function deleteOrder(idx) { if(!confirm("确定删除？"))return; const o=loadOrders(); o.splice(idx,1); saveOrders(o); renderOrders(); showToast("订单已删除"); }
-function clearOrders() { if(!confirm("确定清空所有订单？"))return; localStorage.removeItem(ORDERS_KEY_ADMIN); renderOrders(); showToast("订单已清空"); }
+function clearOrders() { if(!confirm("确定清空所有订单？"))return; localStorage.removeItem("seafood_shop_orders"); renderOrders(); showToast("订单已清空"); }
 function exportOrders() { const o=loadOrders(); const b=new Blob([JSON.stringify(o,null,2)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="orders-"+new Date().toISOString().slice(0,10)+".json"; a.click(); showToast("订单已导出"); }
 
 // ============ PAYMENT QR ============
