@@ -124,6 +124,17 @@ tr:hover td { background:#fafcfd; }
     <input type="password" id="adminGatePwd" placeholder="输入密码" style="width:100%;padding:12px 16px;border:1px solid #ddd;border-radius:10px;font-size:15px;text-align:center;outline:none;margin-bottom:12px;">
     <button id="adminGateBtn" style="width:100%;padding:12px;background:#0a7cbf;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">进入管理</button>
 <script>
+
+// Global error protection
+window.onerror = function(msg, url, line) {
+  var gate = document.getElementById('adminLoginGate');
+  if (gate && gate.style.display !== 'none') {
+    // If login gate is still visible, ensure it stays visible
+    gate.style.display = 'flex';
+  }
+  console.warn('Error: ' + msg + ' at line ' + line);
+  return false;
+};
 document.getElementById("adminGateBtn").onclick = function() {
   var i = document.getElementById("adminGatePwd");
   var g = document.getElementById("adminLoginGate");
