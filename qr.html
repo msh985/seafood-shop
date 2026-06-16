@@ -1,58 +1,45 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><title>扫码下单</title><style>
-body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#f0f4f8;font-family:Arial,sans-serif;flex-direction:column;gap:16px}
-.card{background:#fff;padding:32px;border-radius:16px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.1)}
-h2{color:#0a7cbf;margin-bottom:4px}p{color:#999;font-size:13px;margin-bottom:20px}
-canvas{border-radius:8px}.url{font-size:14px;color:#333;font-weight:600;margin-top:16px;background:#e8f4f8;padding:8px 20px;border-radius:20px}
-</style></head><body><div class="card"><h2>🦐 朱家尖海鲜配送</h2><p>扫码下单 · 送到车上</p>
-<canvas id="q"></canvas><div class="url">http://192.168.1.7:8080/</div></div>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>扫码下单 - 朱家尖海鲜配送</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js">
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;background:#0a7cbf;text-align:center;padding:40px 20px;min-height:100vh}
+.card{background:#fff;border-radius:20px;padding:32px 24px;max-width:360px;margin:0 auto;box-shadow:0 8px 40px rgba(0,0,0,.2)}
+.card h2{color:#0a7cbf;font-size:22px;margin-bottom:4px}
+.card .sub{color:#999;font-size:13px;margin-bottom:20px}
+.qr-wrap{display:inline-block;background:#fff;padding:16px;border-radius:12px;border:2px dashed #e0e0e0;margin-bottom:16px}
+.url{font-size:12px;color:#0a7cbf;word-break:break-all;margin:12px 0}
+.tip{font-size:13px;color:#666;background:#f8f8f8;padding:10px;border-radius:8px;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>朱家尖海鲜配送</h2>
+  <p class="sub">微信扫一扫 直接下单</p>
+  <div class="qr-wrap" id="qrcode"></div>
+  <div class="url">msh985.github.io/seafood-shop</div>
+  <div class="tip">
+    <strong>📱 使用方法：</strong><br>
+    1. 打开微信扫一扫<br>
+    2. 扫描上方二维码<br>
+    3. 进入商城选购下单<br>
+    <span style="font-size:11px;color:#999">下单后一小时内配送到车</span>
+  </div>
+</div>
 <script>
-var EXP=new Array(512),LOG=new Array(256),x=1,i,j;
-for(i=0;i<255;i++){EXP[i]=x;LOG[x]=i;x<<=1;if(x>255)x^=285}
-for(i=255;i<512;i++)EXP[i]=EXP[i-255];
-function M(a,b){return a&&b?EXP[LOG[a]+LOG[b]]:0}
-function P(p,q){var r=[],i,j;for(i=0;i<p.length+q.length-1;i++)r[i]=0;
-for(i=0;i<p.length;i++)for(j=0;j<q.length;j++)r[i+j]^=M(p[i],q[j]);return r}
-function G(n){var g=[1],i;for(i=0;i<n;i++)g=P(g,[1,EXP[i]]);return g}
-function RE(m,n){var g=G(n),r=[],i,j;for(i=0;i<m.length+n;i++)r[i]=i<m.length?m[i]:0;
-for(i=0;i<m.length;i++){var c=r[i];if(c){var l=LOG[c];for(j=0;j<g.length;j++)r[i+j]^=EXP[l+LOG[g[j]]]}}
-var o=[];for(i=0;i<m.length;i++)o[i]=m[i];for(i=0;i<n;i++)o[m.length+i]=r[m.length+i];return o}
-
-var N=29,DC=44,EC=26;
-function ED(t){var b="0100",i;b+=t.length.toString(2).padStart(8,"0");
-for(i=0;i<t.length;i++)b+=t.charCodeAt(i).toString(2).padStart(8,"0");b+="0000";
-while(b.length%8)b+="0";var c=[];for(i=0;i<b.length;i+=8)c.push(parseInt(b.slice(i,i+8),2));
-var pad=[236,17],pi=0;while(c.length<DC){c.push(pad[pi%2]);pi++}return c}
-
-function BM(cw){var m=[],r,c;for(r=0;r<N;r++){m[r]=[];for(c=0;c<N;c++)m[r][c]=-1}
-function F(fr,fc){for(i=0;i<7;i++)for(j=0;j<7;j++)m[fr+i][fc+j]=(i===0||i===6||j===0||j===6||(i>=2&&i<=4&&j>=2&&j<=4))?1:0}
-F(0,0);F(0,N-7);F(N-7,0);
-for(i=0;i<8;i++){if(i<7){m[i][7]=0;m[i][N-8]=0}m[7][i]=0;m[7][N-1-i]=0;m[N-8][i]=0}
-for(i=8;i<N-8;i++){m[6][i]=i%2===0?1:0;m[i][6]=i%2===0?1:0}m[N-8][8]=1;
-var bs="";for(i=0;i<cw.length;i++)bs+=cw[i].toString(2).padStart(8,"0");
-var col=N-1,up=true,bi=0;
-while(col>0){if(col===6)col--;
-var sr=up?N-1:0,er=up?-1:N,st=up?-1:1;
-for(r=sr;r!==er;r+=st)for(c=col;c>=col-1;c--)if(m[r][c]===-1&&bi<bs.length){m[r][c]=parseInt(bs[bi]);bi++}
-col-=2;up=!up}
-for(r=0;r<N;r++)for(c=0;c<N;c++)if(m[r][c]===-1)m[r][c]=0;return m}
-
-// Format info for EC Level M (00) + Mask 0 (000): 101010000010010
-var FI=[1,0,1,0,1,0,0,0,0,0,1,0,0,1,0];
-function AF(m){for(i=0;i<6;i++)m[i][8]=FI[i];m[7][8]=FI[6];m[8][8]=FI[7];m[8][7]=FI[8];
-for(i=0;i<6;i++)m[8][5-i]=FI[9+i];for(i=0;i<8;i++)m[8][N-1-i]=FI[i];for(i=0;i<7;i++)m[N-1-i][8]=FI[i]}
-
-function AM(m){var f={};
-for(var k=0;k<3;k++){var fr=[0,0,N-7][k],fc=[0,N-7,0][k];for(i=0;i<9;i++)for(j=0;j<9;j++){var rr=fr+i,cc=fc+j;if(rr<N&&cc<N)f[rr+","+cc]=true}}
-for(i=0;i<N;i++){f["6,"+i]=true;f[i+",6"]=true}
-for(i=0;i<9;i++){f[i+",8"]=true;f["8,"+i]=true}
-for(i=0;i<8;i++){f["8,"+(N-1-i)]=true;f[(N-1-i)+",8"]=true}
-for(r=0;r<N;r++)for(c=0;c<N;c++)if(!f[r+","+c]&&m[r][c]>=0&&(r+c)%2===0)m[r][c]^=1}
-
-var url=document.querySelector(".url").textContent;
-var dc=ED(url),fc=RE(dc,EC),m=BM(fc);
-AM(m);AF(m);
-var S=400,B=32,s=(S-2*B)/N,can=document.getElementById("q"),ctx;
-can.width=S;can.height=S;ctx=can.getContext("2d");
-ctx.fillStyle="#fff";ctx.fillRect(0,0,S,S);ctx.fillStyle="#0a2e3f";
-for(r=0;r<N;r++)for(c=0;c<N;c++)if(m[r][c])ctx.fillRect(Math.round(B+c*s),Math.round(B+r*s),Math.ceil(s),Math.ceil(s));
-</script></body></html>
+var qr = new QRCode(document.getElementById("qrcode"), {
+  text: "https://msh985.github.io/seafood-shop/",
+  width: 240,
+  height: 240,
+  colorDark: "#000000",
+  colorLight: "#ffffff",
+  correctLevel: QRCode.CorrectLevel.M
+});
+</script>
+</body>
+</html>
