@@ -341,6 +341,9 @@ document.getElementById("gateSubtitle").textContent = "JS已加载 - 请输入�
 <div class="toast" id="toast"></div>
 
 <script>
+// JS TEST: if you see red box below, second script runs
+try { document.getElementById('gateSubtitle').textContent = 'JS第二段已加载 - 请输入管理密码'; } catch(e){}
+
 // ============ DATA STORE ============
 const STORAGE_KEY = "seafood_shop_products";
 const SETTINGS_KEY = "seafood_shop_settings";
