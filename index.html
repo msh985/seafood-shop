@@ -242,7 +242,7 @@ body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
 
 <script>
 // ============ SVG PRODUCT IMAGES ============
-const productImages = {
+var productImages = {
   // 舟山带鱼 - long silver ribbonfish
   "带鱼": `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#d4dce8"/><stop offset="50%" stop-color="#a8b8cc"/><stop offset="100%" stop-color="#e8ecf2"/></linearGradient></defs><rect width="200" height="140" fill="#e8f0f8"/><ellipse cx="100" cy="50" rx="90" ry="8" fill="url(#fg1)" stroke="#8898aa" stroke-width="1"/><ellipse cx="100" cy="65" rx="88" ry="7" fill="url(#fg1)" stroke="#8898aa" stroke-width="1"/><ellipse cx="100" cy="80" rx="90" ry="8" fill="url(#fg1)" stroke="#8898aa" stroke-width="1"/><circle cx="25" cy="65" r="3" fill="#334"/><text x="30" y="69" font-size="8" fill="#334">Radar Net</text></svg>`,
   // 大黄鱼
@@ -275,13 +275,13 @@ const productImages = {
 
 // ============ PRODUCT DATA ============
 // Load products from localStorage (synced with admin panel)
-const STORAGE_KEY = "seafood_shop_products";
+var STORAGE_KEY = "seafood_shop_products";
 function loadShopProducts() {
   try { var raw = localStorage.getItem(STORAGE_KEY); } catch(e) { return defaultProducts; }
   if (raw) { try { var data = JSON.parse(raw); if (data.length > 0) return data; } catch(e) {} }
   return defaultProducts;
 }
-const defaultProducts = [
+var defaultProducts = [
   { id:1, name:"舟山带鱼（中段）", cat:"ice", img:"", desc:"本地雷达网带鱼，肉嫩鲜美", price:68, unit:"斤", tag:"爆款", published:true },
   { id:2, name:"东海大黄鱼", cat:"ice", img:"", desc:"舟山野生大黄鱼，蒜瓣肉", price:158, unit:"条(500g)", tag:"", published:true },
   { id:3, name:"舟山鲳鱼", cat:"ice", img:"", desc:"平川鲳鱼，刺少肉多", price:88, unit:"斤", tag:"", published:true },
@@ -302,8 +302,8 @@ const defaultProducts = [
 
 var products = defaultProducts;
 try { var saved = loadShopProducts(); if (saved && saved.length > 0) { products = saved; } } catch(e) {}
-let cart = [];
-let currentCat = "all";
+var cart = [];
+var currentCat = "all";
 
 
 // DEBUG: Force render check
@@ -321,72 +321,71 @@ function refreshProducts() { products = loadShopProducts(); renderProducts(); }
 try { window.addEventListener('storage', function(e) { if (e.key === STORAGE_KEY) { refreshProducts(); } }); } catch(e) {}
 
 function renderProducts() {
-  const list = document.getElementById("productList");
-  const filtered = (currentCat === "all" ? products : products.filter(function(p){ return p.cat === currentCat; })).filter(function(p){ return p.published !== false; });
-  list.innerHTML = filtered.map(function(p){ return `
-    <div class="product-card">
-      <div class="product-img" onclick="addToCart(${p.id})">
-        ${p.img ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;" alt="${p.name}">` : "🐟"}
-        ${p.tag ? `<span class="product-tag">${p.tag}</span>` : ""}
-      </div>
-      <div class="product-info">
-        <div class="product-name">${p.name}</div>
-        <div class="product-desc">${p.desc}</div>
-        <div class="product-bottom">
-          <div>
-            <span class="product-price"><span>¥</span>${p.price}</span>
-            <span class="product-unit"> /${p.unit}</span>
-          </div>
-          <button class="add-btn" onclick="addToCart(${p.id})">+</button>
-        </div>
-      </div>
-    </div>
-  `).join("");
+  var list = document.getElementById("productList");
+  var filtered = (currentCat === "all" ? products : products.filter(function(p){ return p.cat === currentCat; })).filter(function(p){ return p.published !== false; });
+  list.innerHTML = filtered.map(function(p){     var imgHtml = p.img ? '<img src="'+p.img+'" style="width:100%;height:100%;object-fit:cover;" alt="'+p.name+'">' : "🐟";
+    var tagHtml = p.tag ? '<span class="product-tag">'+p.tag+'</span>' : "";
+    return '<div class="product-card">' +
+      '<div class="product-img" onclick="addToCart('+p.id+')">' + imgHtml + tagHtml + '</div>' +
+      '<div class="product-info">' +
+        '<div class="product-name">'+p.name+'</div>' +
+        '<div class="product-desc">'+p.desc+'</div>' +
+        '<div class="product-bottom">' +
+          '<div>' +
+            '<span class="product-price"><span>¥</span>'+p.price+'</span>' +
+            '<span class="product-unit"> /'+p.unit+'</span>' +
+          '</div>' +
+          '<button class="add-btn" onclick="addToCart('+p.id+')">+</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  `).join("");;
 }
 
 function renderCart() {
-  const container = document.getElementById("cartItems");
+  var container = document.getElementById("cartItems");
   if (cart.length === 0) {
     container.innerHTML = '<div class="cart-empty">🛒<p>购物车是空的</p></div>';
   } else {
-    container.innerHTML = cart.map(function(item,idx){ return `
-      <div class="cart-item">
-        <div class="cart-item-img">${item.img ? `<img src="${item.img}" style="width:100%;height:100%;object-fit:cover;" alt="${item.name}">` : "🐟"}</div>
-        <div class="cart-item-info">
-          <div class="cart-item-name">${item.name}</div>
-          <div class="cart-item-price">¥${item.price}/${item.unit}</div>
-        </div>
-        <div class="cart-item-qty">
-          <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
-          <span class="qty-num">${item.qty}</span>
-          <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
-        </div>
-      </div>
-    `).join("");
+    container.innerHTML = cart.map(function(item,idx){
+      var imgHtml = item.img ? '<img src="'+item.img+'" style="width:100%;height:100%;object-fit:cover;" alt="'+item.name+'">' : "🐟";
+      return '<div class="cart-item">' +
+        '<div class="cart-item-img">'+imgHtml+'</div>' +
+        '<div class="cart-item-info">' +
+          '<div class="cart-item-name">'+item.name+'</div>' +
+          '<div class="cart-item-price">¥'+item.price+'/'+item.unit+'</div>' +
+        '</div>' +
+        '<div class="cart-item-qty">' +
+          '<button class="qty-btn" onclick="changeQty('+idx+',-1)">−</button>' +
+          '<span class="qty-num">'+item.qty+'</span>' +
+          '<button class="qty-btn" onclick="changeQty('+idx+',1)">+</button>' +
+        '</div>' +
+      '</div>';
+    }).join("");;
   }
   updateTotals();
 }
 
 function updateTotals() {
-  const count = cart.reduce(function(s,i){ return s + i.qty; }, 0);
-  const total = cart.reduce(function(s,i){ return s + i.price * i.qty; }, 0);
+  var count = cart.reduce(function(s,i){ return s + i.qty; }, 0);
+  var total = cart.reduce(function(s,i){ return s + i.price * i.qty; }, 0);
   document.getElementById("cartTotal").textContent = "¥" + total;
   document.getElementById("footerTotal").textContent = "¥" + total;
-  document.getElementById("footerCount").textContent = count > 0 ? `共${count}件商品` : "未选商品";
-  const badge = document.getElementById("footerBadge");
+  document.getElementById("footerCount").textContent = count > 0 ? "共"+count+"件商品" : "未选商品";
+  var badge = document.getElementById("footerBadge");
   if (count > 0) { badge.style.display="flex"; badge.textContent=count; }
   else { badge.style.display="none"; }
   document.getElementById("footerCheckout").disabled = count === 0;
 }
 
 function addToCart(id) {
-  const p = products.find(function(x){ return x.id === id; }); if (!p || p.published === false) return;
-  const existing = cart.find(function(x){ return x.id === id; });
+  var p = products.find(function(x){ return x.id === id; }); if (!p || p.published === false) return;
+  var existing = cart.find(function(x){ return x.id === id; });
   if (existing) { existing.qty++; }
   else { cart.push({ id:p.id, name:p.name, imgKey:p.imgKey, img:p.img, price:p.price, unit:p.unit, qty:1 }); }
   renderCart();
 
-  showToast(`已加入：${p.name}`);
+  showToast("已加入："+p.name);
 }
 
 function changeQty(idx, delta) {
@@ -410,9 +409,9 @@ function openOrderForm() {
   if (cart.length === 0) { showToast("请先选择商品"); return; }
   document.getElementById("cartPanel").classList.remove("show");
   document.getElementById("overlay").classList.remove("show");
-  const summary = cart.map(function(i){ return `<div class="row"><span>${i.name} ×${i.qty}</span><span>¥${i.price * i.qty}</span></div>`).join("");
-  const total = cart.reduce(function(s,i){ return s + i.price * i.qty; }, 0);
-  document.getElementById("orderSummary").innerHTML = summary + `<div class="row total"><span>合计</span><span>¥${total}</span></div>`;
+  var summary = cart.map(function(i){ return '<div class="row"><span>'+i.name+' ×'+i.qty+'</span><span>¥'+(i.price*i.qty)+'</span></div>'; }).join('');
+  var total = cart.reduce(function(s,i){ return s + i.price * i.qty; }, 0);
+  document.getElementById('orderSummary').innerHTML = summary + '<div class="row total"><span>合计</span><span>¥'+total+'</span></div>';
   document.getElementById("orderModal").classList.add("show");
   document.getElementById("orderFormEl").style.display = "block";
   document.getElementById("successPage").style.display = "none";
@@ -420,30 +419,30 @@ function openOrderForm() {
 
 function closeOrderForm() { document.getElementById("orderModal").classList.remove("show"); }
 
-const ORDERS_KEY = "seafood_shop_orders";
+var ORDERS_KEY = "seafood_shop_orders";
 
 function submitOrder() {
-  const name = document.getElementById("inputName").value.trim();
-  const phone = document.getElementById("inputPhone").value.trim();
-  const plate = document.getElementById("inputPlate").value.trim();
-  const location = document.getElementById("inputLocation").value;
-  const note = document.getElementById("inputNote").value.trim();
+  var name = document.getElementById("inputName").value.trim();
+  var phone = document.getElementById("inputPhone").value.trim();
+  var plate = document.getElementById("inputPlate").value.trim();
+  var location = document.getElementById("inputLocation").value;
+  var note = document.getElementById("inputNote").value.trim();
   if (!name) { showToast("请填写联系人姓名"); return; }
   if (!phone || !/^1\d{10}$/.test(phone)) { showToast("请填写正确的手机号码"); return; }
   if (!location) { showToast("请选择配送位置"); return; }
-  const orderNo = "ZS" + Date.now().toString(36).toUpperCase();
-  const total = cart.reduce(function(s,i){ return s + i.price * i.qty; }, 0);
-  const order = { orderNo, name, phone, plate: plate || "未提供", location, note, total, items: cart.map(function(i){ return { name:i.name, qty:i.qty, price:i.price }; }), time: new Date().toLocaleString() };
+  var orderNo = "ZS" + Date.now().toString(36).toUpperCase();
+  var total = cart.reduce(function(s,i){ return s + i.price * i.qty; }, 0);
+  var order = { orderNo: orderNo, name: name, phone: phone, plate: plate || "未提供", location: location, note: note, total: total, items: cart.map(function(i){ return { name:i.name, qty:i.qty, price:i.price }; }), time: new Date().toLocaleString() };
     // Save to localStorage for admin panel
-  const orders = JSON.parse((function(){try{return localStorage.getItem(ORDERS_KEY)}catch(e){return null}})() || "[]");
+  var orders = JSON.parse((function(){try{return localStorage.getItem(ORDERS_KEY)}catch(e){return null}})() || "[]");
   orders.unshift(Object.assign({}, order, {status:"待确认", paid:false}));
   try { localStorage.setItem(ORDERS_KEY, JSON.stringify(orders)); } catch(e) {}
   console.log("新订单:", JSON.stringify(order, null, 2));
   document.getElementById("orderFormEl").style.display = "none";
     document.getElementById("successPage").style.display = "block";
   // Show payment info
-  const settings = JSON.parse(localStorage.getItem("seafood_shop_settings") || "{}");
-  const payQr = settings.payQr || "";
+  var settings = JSON.parse(localStorage.getItem("seafood_shop_settings") || "{}");
+  var payQr = settings.payQr || "";
   document.getElementById("paymentSection").innerHTML = payQr 
     ? '<div style="margin-top:16px;text-align:center"><p style="font-weight:600;margin-bottom:8px;">请扫码支付 ¥'+total+'</p><img src="'+payQr+'" style="width:180px;border-radius:8px;" alt="收款码"><p style="font-size:12px;color:#999;margin-top:4px;">支付后我们会尽快配送</p></div>'
     : '<div style="margin-top:16px;background:#fffbe6;padding:12px;border-radius:8px;text-align:center;font-size:14px;">💰 支持<strong>货到付款</strong>，配送员会当面收款</div>';
@@ -483,9 +482,9 @@ function closeLookup() {
   document.getElementById("lookupPanel").classList.remove("show");
 }
 function lookupOrders() {
-  const phone = document.getElementById("lookupPhone").value.trim();
-  const errorEl = document.getElementById("lookupError");
-  const resultsEl = document.getElementById("lookupResults");
+  var phone = document.getElementById("lookupPhone").value.trim();
+  var errorEl = document.getElementById("lookupError");
+  var resultsEl = document.getElementById("lookupResults");
   errorEl.style.display = "none";
   resultsEl.innerHTML = "";
   if (!phone || !/^1\d{10}$/.test(phone)) {
@@ -493,15 +492,15 @@ function lookupOrders() {
     errorEl.style.display = "block";
     return;
   }
-  const orders = JSON.parse(localStorage.getItem("seafood_shop_orders") || "[]");
-  const found = orders.filter(function(o){ return o.phone === phone; });
+  var orders = JSON.parse(localStorage.getItem("seafood_shop_orders") || "[]");
+  var found = orders.filter(function(o){ return o.phone === phone; });
   if (found.length === 0) {
     resultsEl.innerHTML = '<div class="empty-lookup">🔍<p>未找到该手机号的订单</p><p style="font-size:11px;color:#bbb;">新下单请返回首页选购</p></div>';
     return;
   }
-  const statusColors = {"待确认":"#ff6b35","备货中":"#0a7cbf","配送中":"#28a745","已完成":"#666","已取消":"#ccc"};
+  var statusColors = {"待确认":"#ff6b35","备货中":"#0a7cbf","配送中":"#28a745","已完成":"#666","已取消":"#ccc"};
   resultsEl.innerHTML = found.map(function(o){
-    const sc = statusColors[o.status] || "#666";
+    var sc = statusColors[o.status] || "#666";
     return '<div class="order-detail">' +
       '<div style="display:flex;justify-content:space-between;margin-bottom:8px;">' +
         '<span style="font-size:11px;color:#999;">'+o.orderNo+'</span>' +
@@ -517,7 +516,7 @@ function lookupOrders() {
   }).join("");
 }
 function showToast(msg) {
-  const t = document.getElementById("toast");
+  var t = document.getElementById("toast");
   t.textContent = msg; t.classList.add("show");
   clearTimeout(t._timeout);
   t._timeout = setTimeout(function() { t.classList.remove("show"); }, 1500);
